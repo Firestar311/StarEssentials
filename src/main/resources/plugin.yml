@@ -1,0 +1,5 @@
+main: com.starmediadev.core.spigot.SpigotCore
+version: ${project.version}
+name: SpigotCore
+api-version: 1.17
+loadbefore: [MapAPI]
