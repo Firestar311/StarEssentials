@@ -3,3 +3,4 @@ version: ${project.version}
 name: SpigotCore
 api-version: 1.17
 loadbefore: [MapAPI]
+load: STARTUP
