@@ -16,7 +16,7 @@ public class SpigotCore extends JavaPlugin {
         this.saveDefaultConfig();
 
         this.databaseManager = new StarData(Context.SINGLE, getLogger()).getDatabaseManager();
-        this.databaseManager.createDatabase(new SqlProperties().setDatabase(getConfig().getString("mysql.database")).setHost(getConfig().getString("mysql.host"))
+        this.databaseManager.setupDatabase(new SqlProperties().setDatabase(getConfig().getString("mysql.database")).setHost(getConfig().getString("mysql.host"))
         .setPassword(getConfig().getString("mysql.password")).setPort(getConfig().getInt("mysql.port")).setUsername(getConfig().getString("mysql.username")));
         Bukkit.getServicesManager().register(DatabaseManager.class, this.databaseManager, this, ServicePriority.Highest);
     }
