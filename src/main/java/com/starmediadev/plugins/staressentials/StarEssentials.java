@@ -1,6 +1,7 @@
 package com.starmediadev.plugins.staressentials;
 
 import com.starmediadev.plugins.cmds.BroadcastCmd;
+import com.starmediadev.plugins.cmds.FeedCmd;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class StarEssentials extends JavaPlugin {
@@ -8,14 +9,13 @@ public class StarEssentials extends JavaPlugin {
     Add the following commands/features
     
     ClearInv command
-    Feed Command
-    Fly Command
+    - Fly Command
     flyspeed command
     walkspeed command
     gamemode command (With specific shortcuts)
     god command
-    heal command
-    kill command
+    - heal command
+    - kill command
     spawn features (spawn itself, setting spawn, teleporting players on first login to spawn, teleporting players to spawn always (configurable)
     editsign
     repair
@@ -54,5 +54,6 @@ public class StarEssentials extends JavaPlugin {
         this.saveDefaultConfig();
         
         getCommand("broadcast").setExecutor(new BroadcastCmd(this));
+        getCommand("feed").setExecutor(new FeedCmd(this));
     }
 }

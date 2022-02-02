@@ -6,3 +6,4 @@ description: ${project.description}
 commands: 
     broadcast:
       aliases: [bc]
+    feed:

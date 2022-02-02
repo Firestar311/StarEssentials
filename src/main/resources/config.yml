@@ -1,2 +1,2 @@
 broadcast:
-    format: '&e[BROADCAST] {displayname}&8: &a{message}'
+  format: '&e[BROADCAST] &6{displayname}&8: &b{message}'
