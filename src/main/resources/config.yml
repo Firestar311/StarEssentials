@@ -12,3 +12,7 @@ heal:
   self: '&aYou have healed yourself.'
   other: '&aYou have healed &b{target}'
   target: '&aYou have been healed by &b{player}'
+kill:
+  self: '&aYou have killed yourself.'
+  other: '&aYou have killed &b{target}'
+  target: '&aYou have been killed by &b{player}'

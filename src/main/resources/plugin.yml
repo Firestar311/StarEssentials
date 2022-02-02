@@ -10,3 +10,4 @@ commands:
     feed:
     fly:
     heal: 
+    kill:

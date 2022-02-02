@@ -85,5 +85,15 @@ public class StarEssentials extends JavaPlugin {
                 target.sendMessage(MCUtils.color(getConfig().getString("heal.target").replace("{player}", sender.getName())));
             }
         }));
+        
+        getCommand("kill").setExecutor(new PlayerActionCmd(this, "staressentials.command.kill", (target, self, sender) -> {
+            target.setHealth(0);
+            if (self) {
+                target.sendMessage(MCUtils.color(getConfig().getString("kill.self")));
+            } else {
+                sender.sendMessage(MCUtils.color(getConfig().getString("kill.other").replace("{target}", target.getName())));
+                target.sendMessage(MCUtils.color(getConfig().getString("kill.target").replace("{player}", sender.getName())));
+            }
+        }));
     }
 }
