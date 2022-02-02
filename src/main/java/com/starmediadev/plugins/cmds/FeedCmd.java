@@ -44,6 +44,12 @@ public record FeedCmd(StarEssentials plugin) implements CommandExecutor {
         
         target.setFoodLevel(20);
         target.setSaturation(10);
+        if (target.getName().equals(sender.getName())) {
+            sender.sendMessage(MCUtils.color(plugin.getConfig().getString("feed.self")));
+        } else {
+            sender.sendMessage(MCUtils.color(plugin.getConfig().getString("feed.other").replace("{target}", target.getName())));
+            target.sendMessage(MCUtils.color(plugin.getConfig().getString("feed.target").replace("{player}", sender.getName()))); //Will test in a sec
+        }
         return true;
     }
 }
