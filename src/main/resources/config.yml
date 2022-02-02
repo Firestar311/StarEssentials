@@ -8,3 +8,7 @@ fly:
   self: '&aYou have toggled flight to &b{value}'
   other: '&aYou have toggled flight for &b{target} &ato &b{value}'
   target: '&aYour flight has been toggled to &b{value} &aby &b{player}'
+heal:
+  self: '&aYou have healed yourself.'
+  other: '&aYou have healed &b{target}'
+  target: '&aYou have been healed by &b{player}'

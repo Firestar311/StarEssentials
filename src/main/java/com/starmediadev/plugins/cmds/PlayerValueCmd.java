@@ -9,16 +9,28 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-public record FeedCmd(StarEssentials plugin) implements CommandExecutor {
+import java.util.function.BiConsumer;
+
+public class PlayerValueCmd implements CommandExecutor {
+    protected StarEssentials plugin;
+    protected String permission;
+    protected CmdAction cmdAction;
+    
+    public PlayerValueCmd(StarEssentials plugin, String permission, CmdAction cmdAction) {
+        this.plugin = plugin;
+        this.permission = permission;
+        this.cmdAction = cmdAction;
+    }
+    
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!sender.hasPermission("staressentials.command.feed")) {
+        if (!sender.hasPermission(permission)) {
             sender.sendMessage(MCUtils.color("&cYou do not have permission to use that command."));
             return true;
         }
-        
+    
         Player target = null;
-        
+    
         if (sender instanceof ConsoleCommandSender) {
             if (args.length == 0) {
                 sender.sendMessage(MCUtils.color("&cYou must provide a target for the command."));
@@ -32,7 +44,7 @@ public record FeedCmd(StarEssentials plugin) implements CommandExecutor {
             sender.sendMessage(MCUtils.color("&cOnly the Console and Players can use that command."));
             return true;
         }
-        
+    
         //Logically this should be fine as I have covered all the other cases up to this point. I could use a Method to get the target, but why bother?
         if (target == null) {
             target = Bukkit.getPlayer(args[0]);
@@ -42,14 +54,11 @@ public record FeedCmd(StarEssentials plugin) implements CommandExecutor {
             }
         }
         
-        target.setFoodLevel(20);
-        target.setSaturation(10);
-        if (target.getName().equals(sender.getName())) {
-            sender.sendMessage(MCUtils.color(plugin.getConfig().getString("feed.self")));
-        } else {
-            sender.sendMessage(MCUtils.color(plugin.getConfig().getString("feed.other").replace("{target}", target.getName())));
-            target.sendMessage(MCUtils.color(plugin.getConfig().getString("feed.target").replace("{player}", sender.getName()))); //Will test in a sec
-        }
+        cmdAction.performAction(target, target.getName().equals(sender.getName()), sender);
         return true;
+    }
+    
+    public interface CmdAction {
+        void performAction(Player target, boolean self, CommandSender sender);
     }
 }
