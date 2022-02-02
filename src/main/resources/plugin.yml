@@ -1,6 +1,6 @@
-main: com.starmediadev.plugins.spigotcore.SpigotCore
+main: com.starmediadev.plugins.staressentials.StarEssentials
 version: ${project.version}
-name: SpigotCore
+name: StarEssentials
 api-version: 1.17
 loadbefore: [MapAPI]
 load: STARTUP

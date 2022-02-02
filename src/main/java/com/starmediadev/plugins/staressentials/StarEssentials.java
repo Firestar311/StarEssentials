@@ -1,8 +1,8 @@
-package com.starmediadev.plugins.spigotcore;
+package com.starmediadev.plugins.staressentials;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class SpigotCore extends JavaPlugin {
+public class StarEssentials extends JavaPlugin {
 
     /*
     Add the following commands/features
