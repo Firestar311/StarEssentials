@@ -3,7 +3,9 @@ version: ${project.version}
 name: ${project.name}
 api-version: 1.18
 description: ${project.description}
+depend: [StarMCUtils]
 commands: 
     broadcast:
       aliases: [bc]
     feed:
+    fly:

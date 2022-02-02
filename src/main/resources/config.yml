@@ -1,2 +1,10 @@
 broadcast:
   format: '&e[BROADCAST] &6{displayname}&8: &b{message}'
+feed:
+  self: '&aYou have fed yourself.'
+  other: '&aYou have fed &b{target}'
+  target: '&aYou have been fed by &b{player}'
+fly:
+  self: '&aYou have toggled flight to &b{value}'
+  other: '&aYou have toggled flight for &b{target} &ato &b{value}'
+  target: '&aYour flight has been toggled to &b{value} &aby &b{player}'

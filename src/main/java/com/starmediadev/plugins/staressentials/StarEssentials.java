@@ -2,6 +2,7 @@ package com.starmediadev.plugins.staressentials;
 
 import com.starmediadev.plugins.cmds.BroadcastCmd;
 import com.starmediadev.plugins.cmds.FeedCmd;
+import com.starmediadev.plugins.cmds.FlyCmd;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class StarEssentials extends JavaPlugin {
@@ -55,5 +56,6 @@ public class StarEssentials extends JavaPlugin {
         
         getCommand("broadcast").setExecutor(new BroadcastCmd(this));
         getCommand("feed").setExecutor(new FeedCmd(this));
+        getCommand("fly").setExecutor(new FlyCmd(this));
     }
 }
