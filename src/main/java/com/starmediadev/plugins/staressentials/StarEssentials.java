@@ -1,13 +1,12 @@
 package com.starmediadev.plugins.staressentials;
 
+import com.starmediadev.plugins.cmds.BroadcastCmd;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class StarEssentials extends JavaPlugin {
-
     /*
     Add the following commands/features
     
-    Broadcast Command
     ClearInv command
     Feed Command
     Fly Command
@@ -53,5 +52,7 @@ public class StarEssentials extends JavaPlugin {
     
     public void onEnable() {
         this.saveDefaultConfig();
+        
+        getCommand("broadcast").setExecutor(new BroadcastCmd(this));
     }
 }

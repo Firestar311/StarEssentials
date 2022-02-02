@@ -1,6 +1,2 @@
-mysql:
-    host: localhost
-    database: database
-    username: username
-    port: 3306
-    password: 
+broadcast:
+    format: '&e[BROADCAST] {displayname}&8: &a{message}'

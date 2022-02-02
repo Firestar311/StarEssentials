@@ -1,6 +1,8 @@
 main: com.starmediadev.plugins.staressentials.StarEssentials
 version: ${project.version}
-name: StarEssentials
-api-version: 1.17
-loadbefore: [MapAPI]
-load: STARTUP
+name: ${project.name}
+api-version: 1.18
+description: ${project.description}
+commands: 
+    broadcast:
+      aliases: [bc]

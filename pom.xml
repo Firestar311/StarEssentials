@@ -16,6 +16,7 @@
     </properties>
     
     <name>StarEssentials</name>
+    <description>A plugin meant for shared commands and features</description>
 
     <build>
         <plugins>
