@@ -9,14 +9,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.function.BiConsumer;
-
-public class PlayerValueCmd implements CommandExecutor {
+public class PlayerActionCmd implements CommandExecutor {
     protected StarEssentials plugin;
     protected String permission;
     protected CmdAction cmdAction;
     
-    public PlayerValueCmd(StarEssentials plugin, String permission, CmdAction cmdAction) {
+    public PlayerActionCmd(StarEssentials plugin, String permission, CmdAction cmdAction) {
         this.plugin = plugin;
         this.permission = permission;
         this.cmdAction = cmdAction;
@@ -44,9 +42,12 @@ public class PlayerValueCmd implements CommandExecutor {
             sender.sendMessage(MCUtils.color("&cOnly the Console and Players can use that command."));
             return true;
         }
-    
-        //Logically this should be fine as I have covered all the other cases up to this point. I could use a Method to get the target, but why bother?
+        
         if (target == null) {
+            if (!sender.hasPermission(permission + ".other")) {
+                sender.sendMessage(MCUtils.color("&cYou do not have permission to do that to other players."));
+                return true;
+            }
             target = Bukkit.getPlayer(args[0]);
             if (target == null) {
                 sender.sendMessage(MCUtils.color("&cYou provided an invalid target."));

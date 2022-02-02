@@ -1,13 +1,13 @@
 package com.starmediadev.plugins.staressentials;
 
 import com.starmediadev.plugins.cmds.BroadcastCmd;
-import com.starmediadev.plugins.cmds.PlayerValueCmd;
+import com.starmediadev.plugins.cmds.PlayerActionCmd;
 import com.starmediadev.plugins.starmcutils.util.MCUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class StarEssentials extends JavaPlugin {
+    
     /*
-   
     Add the following commands/features
     
     ClearInv command
@@ -16,6 +16,7 @@ public class StarEssentials extends JavaPlugin {
     gamemode command (With specific shortcuts)
     god command
     - kill command
+    - killall command
     spawn features (spawn itself, setting spawn, teleporting players on first login to spawn, teleporting players to spawn always (configurable)
     editsign
     repair
@@ -54,7 +55,7 @@ public class StarEssentials extends JavaPlugin {
         this.saveDefaultConfig();
         
         getCommand("broadcast").setExecutor(new BroadcastCmd(this));
-        getCommand("feed").setExecutor(new PlayerValueCmd(this, "staressentials.command.feed", (target, self, sender) -> {
+        getCommand("feed").setExecutor(new PlayerActionCmd(this, "staressentials.command.feed", (target, self, sender) -> {
             target.setFoodLevel(20);
             target.setSaturation(10);
             if (self) {
@@ -65,7 +66,7 @@ public class StarEssentials extends JavaPlugin {
             }
         }));
         
-        getCommand("fly").setExecutor(new PlayerValueCmd(this, "staressentials.command.fly", (target, self, sender) -> {
+        getCommand("fly").setExecutor(new PlayerActionCmd(this, "staressentials.command.fly", (target, self, sender) -> {
             target.setAllowFlight(!target.getAllowFlight());
             if (self) {
                 sender.sendMessage(MCUtils.color(getConfig().getString("fly.self").replace("{value}", target.getAllowFlight() + "")));
@@ -75,7 +76,7 @@ public class StarEssentials extends JavaPlugin {
             }
         }));
         
-        getCommand("heal").setExecutor(new PlayerValueCmd(this, "staressentials.command.heal", (target, self, sender) -> {
+        getCommand("heal").setExecutor(new PlayerActionCmd(this, "staressentials.command.heal", (target, self, sender) -> {
             target.setHealth(20);
             if (self) {
                 target.sendMessage(MCUtils.color(getConfig().getString("heal.self")));
