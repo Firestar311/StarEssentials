@@ -1,4 +1,4 @@
-main: com.starmediadev.core.spigot.SpigotCore
+main: com.starmediadev.plugins.spigotcore.SpigotCore
 version: ${project.version}
 name: SpigotCore
 api-version: 1.17

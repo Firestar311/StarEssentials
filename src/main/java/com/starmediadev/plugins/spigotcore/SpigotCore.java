@@ -1,4 +1,4 @@
-package com.starmediadev.core.spigot;
+package com.starmediadev.plugins.spigotcore;
 
 import com.starmediadev.data.manager.DatabaseManager;
 import org.bukkit.plugin.java.JavaPlugin;
