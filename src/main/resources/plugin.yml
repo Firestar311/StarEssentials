@@ -9,3 +9,4 @@ commands:
       aliases: [bc]
     feed:
     fly:
+    heal: 
