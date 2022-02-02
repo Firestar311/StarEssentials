@@ -44,7 +44,6 @@ public record FeedCmd(StarEssentials plugin) implements CommandExecutor {
         
         target.setFoodLevel(20);
         target.setSaturation(10);
-        System.out.println(target.getSaturation());
         return true;
     }
 }
