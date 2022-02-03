@@ -11,3 +11,4 @@ commands:
     fly:
     heal: 
     kill:
+    killall:

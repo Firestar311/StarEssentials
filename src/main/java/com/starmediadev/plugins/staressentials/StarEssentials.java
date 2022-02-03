@@ -1,21 +1,20 @@
 package com.starmediadev.plugins.staressentials;
 
 import com.starmediadev.plugins.cmds.BroadcastCmd;
+import com.starmediadev.plugins.cmds.KillAllCmd;
 import com.starmediadev.plugins.cmds.PlayerActionCmd;
 import com.starmediadev.plugins.starmcutils.util.MCUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class StarEssentials extends JavaPlugin {
-    
     /*
     Add the following commands/features
     
-    ClearInv command
+    - ClearInv command
     flyspeed command
     walkspeed command
     gamemode command (With specific shortcuts)
-    god command
-    - kill command
+    - god command
     - killall command
     spawn features (spawn itself, setting spawn, teleporting players on first login to spawn, teleporting players to spawn always (configurable)
     editsign
@@ -24,9 +23,9 @@ public class StarEssentials extends JavaPlugin {
     time
     homes
     warps
-    enderchest
-    trash
-    top (go to highest block at your location)
+    - enderchest
+    - trash
+    - top (go to highest block at your location)
     spawnmob
     more (add more items based on what is holding)
     List (Add an API for this though and can make it based on the ranks)
@@ -95,5 +94,7 @@ public class StarEssentials extends JavaPlugin {
                 target.sendMessage(MCUtils.color(getConfig().getString("kill.target").replace("{player}", sender.getName())));
             }
         }));
+        
+        getCommand("killall").setExecutor(new KillAllCmd(this));
     }
 }
