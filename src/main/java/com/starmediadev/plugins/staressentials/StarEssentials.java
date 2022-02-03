@@ -1,12 +1,16 @@
 package com.starmediadev.plugins.staressentials;
 
 import com.starmediadev.plugins.staressentials.cmds.BroadcastCmd;
+import com.starmediadev.plugins.staressentials.cmds.InventoryOpenCmd;
 import com.starmediadev.plugins.staressentials.cmds.KillAllCmd;
 import com.starmediadev.plugins.staressentials.cmds.PlayerActionCmd;
 import com.starmediadev.plugins.staressentials.listeners.GodListener;
 import com.starmediadev.plugins.starmcutils.util.MCUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -33,8 +37,6 @@ public class StarEssentials extends JavaPlugin {
     time
     homes
     warps
-    - enderchest
-    - trash
     - top (go to highest block at your location)
     spawnmob
     more (add more items based on what is holding)
@@ -42,14 +44,13 @@ public class StarEssentials extends JavaPlugin {
     Item command (Spawn an item, will have support for StarItems, but does not replace this command)
     near
     enchant
-    workbench
     Give
     Sudo (Add a hook for StarPerms/API for StarPerms to allow more control over this)
     Back
     
     Stuff to add here and add checks for the other more indepth plugins to disable
     spawner (change spawner type)
-    invsee (and echest variant) will be in a moderator tools plugin eventually, this provides a very basic thing
+    TODO (check for plugin) invsee (and echest variant) will be in a moderator tools plugin eventually, this provides a very basic thing
     basic punishment commands (kick, warn, ban, tempban, mute, tempmute and kickall)
     Nicknames
     messaging commands (eventually add support for detecting StarChat), also toggle commands
@@ -125,6 +126,31 @@ public class StarEssentials extends JavaPlugin {
         }));
         
         getCommand("killall").setExecutor(new KillAllCmd(this));
+        
+        getCommand("inventorysee").setExecutor(new InventoryOpenCmd(this, "staressentials.command.invsee") {
+            public Inventory getInventory(Player player) {
+                return player.getInventory();
+            }
+        });
+        
+        getCommand("enderchest").setExecutor(new InventoryOpenCmd(this, "staressentials.command.echest") {
+            public Inventory getInventory(Player player) {
+                return player.getEnderChest();
+            }
+        });
+        
+        getCommand("workbench").setExecutor(new InventoryOpenCmd(this, "staressentials.command.workbench") {
+            public Inventory getInventory(Player player) {
+                MCUtils.debugSender(player, "Note: this command currently does not work properly");
+                return Bukkit.createInventory(null, InventoryType.WORKBENCH);
+            }
+        });
+        
+        getCommand("trash").setExecutor(new InventoryOpenCmd(this, "staressentials.command.trash") {
+            public Inventory getInventory(Player player) {
+                return Bukkit.createInventory(null, 54, "Trash Can");
+            }
+        });
         
         getServer().getPluginManager().registerEvents(new GodListener(this), this);
     }

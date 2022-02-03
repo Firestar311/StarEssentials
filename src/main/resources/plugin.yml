@@ -14,3 +14,10 @@ commands:
     killall:
     clearinv:
     god:
+    inventorysee:
+        aliases: [invsee]
+    enderchest:
+        aliases: [echest]
+    workbench:
+        aliases: [wb]
+    trash:
