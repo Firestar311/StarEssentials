@@ -26,3 +26,7 @@ god:
   self: '&aYou have toggled god mode to &b{value}'
   other: '&aYou have toggled god mode for &b{target} &ato &b{value}'
   target: '&aYour god mode has been toggled to &b{value} &aby &b{player}'
+top:
+  self: '&aYou have teleported yourself to the highest block at your location.'
+  other: '&aYou have teleported &b{target} &ato the highest block at their location'
+  target: '&aYou have been teleported to the highest block at your location by &b{player}'

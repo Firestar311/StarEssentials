@@ -21,3 +21,4 @@ commands:
     workbench:
         aliases: [wb]
     trash:
+    top:

@@ -7,6 +7,8 @@ import com.starmediadev.plugins.staressentials.cmds.PlayerActionCmd;
 import com.starmediadev.plugins.staressentials.listeners.GodListener;
 import com.starmediadev.plugins.starmcutils.util.MCUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -37,7 +39,6 @@ public class StarEssentials extends JavaPlugin {
     time
     homes
     warps
-    - top (go to highest block at your location)
     spawnmob
     more (add more items based on what is holding)
     List (Add an API for this though and can make it based on the ranks)
@@ -151,6 +152,14 @@ public class StarEssentials extends JavaPlugin {
                 return Bukkit.createInventory(null, 54, "Trash Can");
             }
         });
+    
+        getCommand("top").setExecutor(new PlayerActionCmd(this, "staressentials.command.top", (target, self, sender) -> {
+            Block highestBlock = target.getWorld().getHighestBlockAt(target.getLocation());
+            Location location = highestBlock.getLocation().clone();
+            location.setY(location.getY() + 1);
+            target.teleport(location);
+            sendActionMessage(this, target, self, sender, "top");
+        }));
         
         getServer().getPluginManager().registerEvents(new GodListener(this), this);
     }
