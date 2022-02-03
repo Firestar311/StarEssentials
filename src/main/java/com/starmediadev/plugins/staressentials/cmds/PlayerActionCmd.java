@@ -1,4 +1,4 @@
-package com.starmediadev.plugins.cmds;
+package com.starmediadev.plugins.staressentials.cmds;
 
 import com.starmediadev.plugins.staressentials.StarEssentials;
 import com.starmediadev.plugins.starmcutils.util.MCUtils;
@@ -57,6 +57,24 @@ public class PlayerActionCmd implements CommandExecutor {
         
         cmdAction.performAction(target, target.getName().equals(sender.getName()), sender);
         return true;
+    }
+    
+    public static void sendActionMessageValue(StarEssentials plugin, Player target, boolean self, CommandSender sender, String msgBase, Object value) {
+        if (self) {
+            sender.sendMessage(MCUtils.color(plugin.getConfig().getString(msgBase + ".self").replace("{value}", value + "")));
+        } else {
+            sender.sendMessage(MCUtils.color(plugin.getConfig().getString(msgBase + ".other").replace("{target}", target.getName()).replace("{value}", value + "")));
+            target.sendMessage(MCUtils.color(plugin.getConfig().getString(msgBase + ".target").replace("{player}", sender.getName()).replace("{value}", value + "")));
+        }
+    }
+    
+    public static void sendActionMessage(StarEssentials plugin, Player target, boolean self, CommandSender sender, String msgBase) {
+        if (self) {
+            target.sendMessage(MCUtils.color(plugin.getConfig().getString(msgBase + ".self")));
+        } else {
+            sender.sendMessage(MCUtils.color(plugin.getConfig().getString(msgBase + ".other").replace("{target}", target.getName())));
+            target.sendMessage(MCUtils.color(plugin.getConfig().getString(msgBase + ".target").replace("{player}", sender.getName())));
+        }
     }
     
     public interface CmdAction {

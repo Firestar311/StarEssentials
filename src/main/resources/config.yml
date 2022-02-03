@@ -22,3 +22,7 @@ clearinv:
   self: '&aYou have cleared your inventory.'
   other: '&aYou have cleared the inventory of &b{target}'
   target: '&aYour inventory has been cleared by &b{player}'
+god:
+  self: '&aYou have toggled god mode to &b{value}'
+  other: '&aYou have toggled god mode for &b{target} &ato &b{value}'
+  target: '&aYour god mode has been toggled to &b{value} &aby &b{player}'

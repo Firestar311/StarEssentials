@@ -1,4 +1,4 @@
-package com.starmediadev.plugins.cmds;
+package com.starmediadev.plugins.staressentials.cmds;
 
 import com.starmediadev.plugins.staressentials.StarEssentials;
 import com.starmediadev.plugins.starmcutils.util.MCUtils;

@@ -13,3 +13,4 @@ commands:
     kill:
     killall:
     clearinv:
+    god:

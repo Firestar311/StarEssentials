@@ -1,20 +1,31 @@
 package com.starmediadev.plugins.staressentials;
 
-import com.starmediadev.plugins.cmds.BroadcastCmd;
-import com.starmediadev.plugins.cmds.KillAllCmd;
-import com.starmediadev.plugins.cmds.PlayerActionCmd;
+import com.starmediadev.plugins.staressentials.cmds.BroadcastCmd;
+import com.starmediadev.plugins.staressentials.cmds.KillAllCmd;
+import com.starmediadev.plugins.staressentials.cmds.PlayerActionCmd;
+import com.starmediadev.plugins.staressentials.listeners.GodListener;
 import com.starmediadev.plugins.starmcutils.util.MCUtils;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
+
+import static com.starmediadev.plugins.staressentials.cmds.PlayerActionCmd.sendActionMessage;
+import static com.starmediadev.plugins.staressentials.cmds.PlayerActionCmd.sendActionMessageValue;
 
 public class StarEssentials extends JavaPlugin {
     /*
     Add the following commands/features
     
-    flyspeed command
-    walkspeed command
+    flyspeed command - default .1
+    walkspeed command - default .2
     gamemode command (With specific shortcuts)
-    - god command
     spawn features (spawn itself, setting spawn, teleporting players on first login to spawn, teleporting players to spawn always (configurable)
     editsign
     repair
@@ -49,63 +60,88 @@ public class StarEssentials extends JavaPlugin {
     Vanish
      */
     
+    private Set<UUID> playersInGodMode = new HashSet<>();
+    
+    private File godmodeFile;
+    private YamlConfiguration godmodeConfig;
+    
+    @Override
     public void onEnable() {
         this.saveDefaultConfig();
+        godmodeFile = new File(getDataFolder(), "godmode.yml");
+        Path godmodeFilePath = godmodeFile.toPath();
+        if (Files.notExists(godmodeFilePath)) {
+            try {
+                Files.createFile(godmodeFilePath);
+            } catch (IOException e) {
+                getLogger().severe("Could not create godmode.yml: " + e.getMessage());
+            }
+        }
+        
+        godmodeConfig = YamlConfiguration.loadConfiguration(godmodeFile);
+        
+        List<String> rawPlayersInGodMode = godmodeConfig.getStringList("players");
+        for (String entry : rawPlayersInGodMode) {
+            this.playersInGodMode.add(UUID.fromString(entry));
+        }
         
         getCommand("broadcast").setExecutor(new BroadcastCmd(this));
         getCommand("feed").setExecutor(new PlayerActionCmd(this, "staressentials.command.feed", (target, self, sender) -> {
             target.setFoodLevel(20);
             target.setSaturation(10);
-            if (self) {
-                target.sendMessage(MCUtils.color(getConfig().getString("feed.self")));
-            } else {
-                sender.sendMessage(MCUtils.color(getConfig().getString("feed.other").replace("{target}", target.getName())));
-                target.sendMessage(MCUtils.color(getConfig().getString("feed.target").replace("{player}", sender.getName())));
-            }
+            sendActionMessage(this, target, self, sender, "feed");
         }));
         
         getCommand("fly").setExecutor(new PlayerActionCmd(this, "staressentials.command.fly", (target, self, sender) -> {
             target.setAllowFlight(!target.getAllowFlight());
-            if (self) {
-                sender.sendMessage(MCUtils.color(getConfig().getString("fly.self").replace("{value}", target.getAllowFlight() + "")));
-            } else {
-                sender.sendMessage(MCUtils.color(getConfig().getString("fly.other").replace("{target}", target.getName()).replace("{value}", target.getAllowFlight() + "")));
-                target.sendMessage(MCUtils.color(getConfig().getString("fly.target").replace("{player}", sender.getName()).replace("{value}", target.getAllowFlight() + "")));
-            }
+            sendActionMessageValue(this, target, self, sender, "fly", target.getAllowFlight());
         }));
         
         getCommand("heal").setExecutor(new PlayerActionCmd(this, "staressentials.command.heal", (target, self, sender) -> {
             target.setHealth(20);
-            if (self) {
-                target.sendMessage(MCUtils.color(getConfig().getString("heal.self")));
-            } else {
-                sender.sendMessage(MCUtils.color(getConfig().getString("heal.other").replace("{target}", target.getName())));
-                target.sendMessage(MCUtils.color(getConfig().getString("heal.target").replace("{player}", sender.getName())));
-            }
+            sendActionMessage(this, target, self, sender, "heal");
         }));
         
         getCommand("kill").setExecutor(new PlayerActionCmd(this, "staressentials.command.kill", (target, self, sender) -> {
             target.setHealth(0);
-            if (self) {
-                target.sendMessage(MCUtils.color(getConfig().getString("kill.self")));
-            } else {
-                sender.sendMessage(MCUtils.color(getConfig().getString("kill.other").replace("{target}", target.getName())));
-                target.sendMessage(MCUtils.color(getConfig().getString("kill.target").replace("{player}", sender.getName())));
-            }
+            sendActionMessage(this, target, self, sender, "kill");
         }));
         
         getCommand("clearinv").setExecutor(new PlayerActionCmd(this, "staressentials.command.clearinv", (target, self, sender) -> {
             target.getInventory().setContents(new ItemStack[0]);
             target.getInventory().setArmorContents(new ItemStack[0]);
             target.getInventory().setExtraContents(new ItemStack[0]);
-            if (self) {
-                target.sendMessage(MCUtils.color(getConfig().getString("clearinv.self")));
+            sendActionMessage(this, target, self, sender, "clearinv");
+        }));
+        
+        getCommand("god").setExecutor(new PlayerActionCmd(this, "staressentials.command.god", (target, self, sender) -> {
+            if (playersInGodMode.contains(target.getUniqueId())) {
+                playersInGodMode.remove(target.getUniqueId());
             } else {
-                sender.sendMessage(MCUtils.color(getConfig().getString("clearinv.other").replace("{target}", target.getName())));
-                target.sendMessage(MCUtils.color(getConfig().getString("clearinv.target").replace("{player}", sender.getName())));
+                playersInGodMode.add(target.getUniqueId());
             }
+            
+            sendActionMessageValue(this, target, self, sender, "god", playersInGodMode.contains(target.getUniqueId()));
         }));
         
         getCommand("killall").setExecutor(new KillAllCmd(this));
+        
+        getServer().getPluginManager().registerEvents(new GodListener(this), this);
+    }
+    
+    @Override
+    public void onDisable() {
+        List<String> rawPlayersInGodMode = new ArrayList<>();
+        this.playersInGodMode.forEach(uuid -> rawPlayersInGodMode.add(uuid.toString()));
+        godmodeConfig.set("players", rawPlayersInGodMode);
+        try {
+            godmodeConfig.save(godmodeFile);
+        } catch (IOException e) {
+            getLogger().severe("Could not save godmode.yml: " + e.getMessage());
+        }
+    }
+    
+    public boolean isPlayerInGodMode(Player player) {
+        return this.playersInGodMode.contains(player.getUniqueId());
     }
 }
