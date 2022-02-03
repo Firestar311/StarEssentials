@@ -4,18 +4,17 @@ import com.starmediadev.plugins.cmds.BroadcastCmd;
 import com.starmediadev.plugins.cmds.KillAllCmd;
 import com.starmediadev.plugins.cmds.PlayerActionCmd;
 import com.starmediadev.plugins.starmcutils.util.MCUtils;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class StarEssentials extends JavaPlugin {
     /*
     Add the following commands/features
     
-    - ClearInv command
     flyspeed command
     walkspeed command
     gamemode command (With specific shortcuts)
     - god command
-    - killall command
     spawn features (spawn itself, setting spawn, teleporting players on first login to spawn, teleporting players to spawn always (configurable)
     editsign
     repair
@@ -92,6 +91,18 @@ public class StarEssentials extends JavaPlugin {
             } else {
                 sender.sendMessage(MCUtils.color(getConfig().getString("kill.other").replace("{target}", target.getName())));
                 target.sendMessage(MCUtils.color(getConfig().getString("kill.target").replace("{player}", sender.getName())));
+            }
+        }));
+        
+        getCommand("clearinv").setExecutor(new PlayerActionCmd(this, "staressentials.command.clearinv", (target, self, sender) -> {
+            target.getInventory().setContents(new ItemStack[0]);
+            target.getInventory().setArmorContents(new ItemStack[0]);
+            target.getInventory().setExtraContents(new ItemStack[0]);
+            if (self) {
+                target.sendMessage(MCUtils.color(getConfig().getString("clearinv.self")));
+            } else {
+                sender.sendMessage(MCUtils.color(getConfig().getString("clearinv.other").replace("{target}", target.getName())));
+                target.sendMessage(MCUtils.color(getConfig().getString("clearinv.target").replace("{player}", sender.getName())));
             }
         }));
         

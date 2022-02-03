@@ -12,3 +12,4 @@ commands:
     heal: 
     kill:
     killall:
+    clearinv:

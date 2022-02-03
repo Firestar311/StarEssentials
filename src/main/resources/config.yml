@@ -18,3 +18,7 @@ kill:
   target: '&aYou have been killed by &b{player}'
 killall:
   format: '&aYou killed &e{total} &aentities of type &b{type}'
+clearinv:
+  self: '&aYou have cleared your inventory.'
+  other: '&aYou have cleared the inventory of &b{target}'
+  target: '&aYour inventory has been cleared by &b{player}'
