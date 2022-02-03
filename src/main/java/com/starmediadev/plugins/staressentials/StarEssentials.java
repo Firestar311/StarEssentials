@@ -1,12 +1,11 @@
 package com.starmediadev.plugins.staressentials;
 
-import com.starmediadev.plugins.staressentials.cmds.BroadcastCmd;
-import com.starmediadev.plugins.staressentials.cmds.InventoryOpenCmd;
-import com.starmediadev.plugins.staressentials.cmds.KillAllCmd;
-import com.starmediadev.plugins.staressentials.cmds.PlayerActionCmd;
+import com.starmediadev.plugins.staressentials.cmds.*;
 import com.starmediadev.plugins.staressentials.listeners.GodListener;
 import com.starmediadev.plugins.starmcutils.util.MCUtils;
+import com.starmediadev.utils.helper.StringHelper;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -31,7 +30,6 @@ public class StarEssentials extends JavaPlugin {
     
     flyspeed command - default .1
     walkspeed command - default .2
-    gamemode command (With specific shortcuts)
     spawn features (spawn itself, setting spawn, teleporting players on first login to spawn, teleporting players to spawn always (configurable)
     editsign
     repair
@@ -60,6 +58,7 @@ public class StarEssentials extends JavaPlugin {
     Ignore (StarChat overrides this)
     Socialspy
     Vanish
+    Simple world management (just teleportation, a custom plugin for creating worlds will exist)
      */
     
     private Set<UUID> playersInGodMode = new HashSet<>();
@@ -160,6 +159,29 @@ public class StarEssentials extends JavaPlugin {
             target.teleport(location);
             sendActionMessage(this, target, self, sender, "top");
         }));
+        
+        getCommand("gmc").setExecutor(new PlayerActionCmd(this, "staressentials.command.gamemode.creative", (target, self, sender) -> {
+            target.setGameMode(GameMode.CREATIVE);
+            sendActionMessageValue(this, target, self, sender, "gamemode", StringHelper.capitalizeEveryWord(target.getGameMode().name()));
+        }));
+    
+        getCommand("gms").setExecutor(new PlayerActionCmd(this, "staressentials.command.gamemode.survival", (target, self, sender) -> {
+            target.setGameMode(GameMode.SURVIVAL);
+            sendActionMessageValue(this, target, self, sender, "gamemode", StringHelper.capitalizeEveryWord(target.getGameMode().name()));
+        }));
+    
+        getCommand("gmsp").setExecutor(new PlayerActionCmd(this, "staressentials.command.gamemode.spectator", (target, self, sender) -> {
+            target.setGameMode(GameMode.SPECTATOR);
+            sendActionMessageValue(this, target, self, sender, "gamemode", StringHelper.capitalizeEveryWord(target.getGameMode().name()));
+        }));
+    
+        getCommand("gma").setExecutor(new PlayerActionCmd(this, "staressentials.command.gamemode.adventure", (target, self, sender) -> {
+            target.setGameMode(GameMode.ADVENTURE);
+            sendActionMessageValue(this, target, self, sender, "gamemode", StringHelper.capitalizeEveryWord(target.getGameMode().name()));
+        }));
+        
+        getCommand("gamemode").setExecutor(new GamemodeCommand(this));
+        
         
         getServer().getPluginManager().registerEvents(new GodListener(this), this);
     }

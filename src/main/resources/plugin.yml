@@ -22,3 +22,9 @@ commands:
         aliases: [wb]
     trash:
     top:
+    gamemode:
+        aliases: [gm]
+    gmc:
+    gms:
+    gmsp:
+    gma:
