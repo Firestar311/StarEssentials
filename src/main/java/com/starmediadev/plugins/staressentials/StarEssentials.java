@@ -79,7 +79,7 @@ public class StarEssentials extends JavaPlugin {
         for (String entry : rawPlayersInGodMode) {
             this.playersInGodMode.add(UUID.fromString(entry));
         }
-    
+        
         //Non Module commands
         getCommand("broadcast").setExecutor(new BroadcastCmd(this));
         getCommand("feed").setExecutor(new PlayerActionCmd(this, "staressentials.command.feed", (target, self, sender) -> {
@@ -146,7 +146,7 @@ public class StarEssentials extends JavaPlugin {
                 return Bukkit.createInventory(null, 54, "Trash Can");
             }
         });
-    
+        
         getCommand("top").setExecutor(new PlayerActionCmd(this, "staressentials.command.top", (target, self, sender) -> {
             Block highestBlock = target.getWorld().getHighestBlockAt(target.getLocation());
             Location location = highestBlock.getLocation().clone();
@@ -159,17 +159,17 @@ public class StarEssentials extends JavaPlugin {
             target.setGameMode(GameMode.CREATIVE);
             sendActionMessageValue(this, target, self, sender, "gamemode", StringHelper.capitalizeEveryWord(target.getGameMode().name()));
         }));
-    
+        
         getCommand("gms").setExecutor(new PlayerActionCmd(this, "staressentials.command.gamemode.survival", (target, self, sender) -> {
             target.setGameMode(GameMode.SURVIVAL);
             sendActionMessageValue(this, target, self, sender, "gamemode", StringHelper.capitalizeEveryWord(target.getGameMode().name()));
         }));
-    
+        
         getCommand("gmsp").setExecutor(new PlayerActionCmd(this, "staressentials.command.gamemode.spectator", (target, self, sender) -> {
             target.setGameMode(GameMode.SPECTATOR);
             sendActionMessageValue(this, target, self, sender, "gamemode", StringHelper.capitalizeEveryWord(target.getGameMode().name()));
         }));
-    
+        
         getCommand("gma").setExecutor(new PlayerActionCmd(this, "staressentials.command.gamemode.adventure", (target, self, sender) -> {
             target.setGameMode(GameMode.ADVENTURE);
             sendActionMessageValue(this, target, self, sender, "gamemode", StringHelper.capitalizeEveryWord(target.getGameMode().name()));
@@ -207,14 +207,14 @@ public class StarEssentials extends JavaPlugin {
                     return true;
                 });
             }
-    
+            
             public void createEventListeners() {
                 this.listeners.add(new SpawnListener(StarEssentials.this));
             }
         };
         
         this.modules.put(spawnModule.getName(), spawnModule);
-    
+        
         ConfigurationSection modulesSection = modulesConfig.getConfiguration().getConfigurationSection("modules");
         if (modulesSection != null) {
             for (String moduleName : modulesSection.getKeys(false)) {
@@ -225,16 +225,15 @@ public class StarEssentials extends JavaPlugin {
                 }
             }
         }
-    
+        
         for (StarModule module : this.modules.values()) {
-            module.createCommandExecutors();
-            module.createEventListeners();
+            module.init();
             if (module.isEnabled()) {
                 module.registerCommands();
                 module.registerListeners();
             }
         }
-    
+        
         getServer().getPluginManager().registerEvents(new GodListener(this), this);
     }
     
@@ -244,7 +243,7 @@ public class StarEssentials extends JavaPlugin {
         this.playersInGodMode.forEach(uuid -> rawPlayersInGodMode.add(uuid.toString()));
         godmodeConfig.getConfiguration().set("players", rawPlayersInGodMode);
         godmodeConfig.save();
-    
+        
         for (StarModule module : this.modules.values()) {
             modulesConfig.getConfiguration().set("modules." + module.getName() + ".enabled", module.isEnabled());
         }
