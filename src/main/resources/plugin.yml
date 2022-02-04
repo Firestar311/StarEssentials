@@ -30,3 +30,5 @@ commands:
     gma:
     spawn:
     setspawn:
+    spawnmob:
+        aliases: [spawnentity]

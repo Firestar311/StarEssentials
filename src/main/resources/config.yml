@@ -40,3 +40,9 @@ spawn:
   target: '&aYou have been sent to spawn by &b{player}'
   set: '&aYou have set the spawn location'
   teleportonjoin: true
+spawnmob:
+  settings: 
+    limit: 10
+  messages:
+    single: '&aYou have spawned a(n) &b{entity}'
+    multiple: '&aYou have spawned &b{amount} &aof &b{entity}'
