@@ -2,23 +2,22 @@ package com.starmediadev.plugins.staressentials;
 
 import com.starmediadev.plugins.staressentials.cmds.*;
 import com.starmediadev.plugins.staressentials.listeners.GodListener;
+import com.starmediadev.plugins.staressentials.listeners.SpawnListener;
+import com.starmediadev.plugins.staressentials.module.StarModule;
+import com.starmediadev.plugins.starmcutils.util.Config;
 import com.starmediadev.plugins.starmcutils.util.MCUtils;
 import com.starmediadev.utils.helper.StringHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
 import static com.starmediadev.plugins.staressentials.cmds.PlayerActionCmd.sendActionMessage;
@@ -30,62 +29,58 @@ public class StarEssentials extends JavaPlugin {
     
     flyspeed command - default .1
     walkspeed command - default .2
-    spawn features (spawn itself, setting spawn, teleporting players on first login to spawn, teleporting players to spawn always (configurable)
     editsign
     repair
-    weather
-    time
+    - weather
+    - time
     homes
     warps
-    spawnmob
+    - spawnmob
     more (add more items based on what is holding)
     List (Add an API for this though and can make it based on the ranks)
     Item command (Spawn an item, will have support for StarItems, but does not replace this command)
     near
-    enchant
+    - enchant
     Give
     Sudo (Add a hook for StarPerms/API for StarPerms to allow more control over this)
     Back
     
     Stuff to add here and add checks for the other more indepth plugins to disable
-    spawner (change spawner type)
+    - spawner (change spawner type)
     TODO (check for plugin) invsee (and echest variant) will be in a moderator tools plugin eventually, this provides a very basic thing
     basic punishment commands (kick, warn, ban, tempban, mute, tempmute and kickall)
     Nicknames
     messaging commands (eventually add support for detecting StarChat), also toggle commands
-    tp commands (tp, tpall, tphere, tpa, tpahere)
-    Very basic economy system with Vault integration
+    - tp commands (tp, tpall, tphere, tpa, tpahere)
+    - Very basic economy system with Vault integration
     Ignore (StarChat overrides this)
     Socialspy
     Vanish
     Simple world management (just teleportation, a custom plugin for creating worlds will exist)
+    - spawn features (spawn itself, setting spawn, teleporting players on first login to spawn, teleporting players to spawn always (configurable)
      */
     
-    private Set<UUID> playersInGodMode = new HashSet<>();
+    private Map<String, StarModule> modules = new HashMap<>();
+    private Config godmodeConfig, modulesConfig;
     
-    private File godmodeFile;
-    private YamlConfiguration godmodeConfig;
+    private Set<UUID> playersInGodMode = new HashSet<>();
+    private Location spawn;
     
     @Override
     public void onEnable() {
         this.saveDefaultConfig();
-        godmodeFile = new File(getDataFolder(), "godmode.yml");
-        Path godmodeFilePath = godmodeFile.toPath();
-        if (Files.notExists(godmodeFilePath)) {
-            try {
-                Files.createFile(godmodeFilePath);
-            } catch (IOException e) {
-                getLogger().severe("Could not create godmode.yml: " + e.getMessage());
-            }
-        }
+        godmodeConfig = new Config(this, "godmode.yml");
+        godmodeConfig.setup();
         
-        godmodeConfig = YamlConfiguration.loadConfiguration(godmodeFile);
+        modulesConfig = new Config(this, "modules.yml");
+        modulesConfig.setup();
         
-        List<String> rawPlayersInGodMode = godmodeConfig.getStringList("players");
+        List<String> rawPlayersInGodMode = godmodeConfig.getConfiguration().getStringList("players");
         for (String entry : rawPlayersInGodMode) {
             this.playersInGodMode.add(UUID.fromString(entry));
         }
-        
+    
+        //Non Module commands
         getCommand("broadcast").setExecutor(new BroadcastCmd(this));
         getCommand("feed").setExecutor(new PlayerActionCmd(this, "staressentials.command.feed", (target, self, sender) -> {
             target.setFoodLevel(20);
@@ -182,7 +177,64 @@ public class StarEssentials extends JavaPlugin {
         
         getCommand("gamemode").setExecutor(new GamemodeCommand(this));
         
+        if (getConfig().contains("spawn")) {
+            this.spawn = getConfig().getLocation("spawn.location");
+        } else {
+            this.spawn = Bukkit.getWorlds().get(0).getSpawnLocation();
+        }
         
+        //Modules
+        StarModule spawnModule = new StarModule(this, "spawn") {
+            public void createCommandExecutors() {
+                this.commands.put("spawn", new PlayerActionCmd(starEssentials, "staressentials.command.spawn", (target, self, sender) -> {
+                    target.teleport(spawn);
+                    sendActionMessage(starEssentials, target, self, sender, "spawn");
+                }));
+                
+                this.commands.put("setspawn", (sender, cmd, label, args) -> {
+                    if (!(sender instanceof Player player)) {
+                        sender.sendMessage(MCUtils.color("&cOnly players can use this command."));
+                        return true;
+                    }
+                    
+                    if (!player.hasPermission("staressentials.command.spawn.set")) {
+                        player.sendMessage(MCUtils.color("&cYou do not have permission to use that command."));
+                        return true;
+                    }
+                    
+                    starEssentials.setSpawn(player.getLocation());
+                    player.sendMessage(MCUtils.color(starEssentials.getConfig().getString("spawn.set")));
+                    return true;
+                });
+            }
+    
+            public void createEventListeners() {
+                this.listeners.add(new SpawnListener(starEssentials));
+            }
+        };
+        
+        this.modules.put(spawnModule.getName(), spawnModule);
+    
+        ConfigurationSection modulesSection = modulesConfig.getConfiguration().getConfigurationSection("modules");
+        if (modulesSection != null) {
+            for (String moduleName : modulesSection.getKeys(false)) {
+                boolean enabled = modulesSection.getBoolean(moduleName + ".enabled");
+                StarModule module = this.modules.get(moduleName);
+                if (module != null) {
+                    module.setEnabled(enabled);
+                }
+            }
+        }
+    
+        for (StarModule module : this.modules.values()) {
+            module.createCommandExecutors();
+            module.createEventListeners();
+            if (module.isEnabled()) {
+                module.registerCommands();
+                module.registerListeners();
+            }
+        }
+    
         getServer().getPluginManager().registerEvents(new GodListener(this), this);
     }
     
@@ -190,15 +242,27 @@ public class StarEssentials extends JavaPlugin {
     public void onDisable() {
         List<String> rawPlayersInGodMode = new ArrayList<>();
         this.playersInGodMode.forEach(uuid -> rawPlayersInGodMode.add(uuid.toString()));
-        godmodeConfig.set("players", rawPlayersInGodMode);
-        try {
-            godmodeConfig.save(godmodeFile);
-        } catch (IOException e) {
-            getLogger().severe("Could not save godmode.yml: " + e.getMessage());
+        godmodeConfig.getConfiguration().set("players", rawPlayersInGodMode);
+        godmodeConfig.save();
+    
+        for (StarModule module : this.modules.values()) {
+            modulesConfig.getConfiguration().set("modules." + module.getName() + ".enabled", module.isEnabled());
         }
+        modulesConfig.save();
+        
+        this.getConfig().set("spawn.location", this.spawn); //TODO move to the module config when implemented
+        this.saveConfig();
     }
     
     public boolean isPlayerInGodMode(Player player) {
         return this.playersInGodMode.contains(player.getUniqueId());
+    }
+    
+    public Location getSpawn() {
+        return spawn;
+    }
+    
+    public void setSpawn(Location spawn) {
+        this.spawn = spawn;
     }
 }

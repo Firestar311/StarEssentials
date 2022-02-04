@@ -34,3 +34,9 @@ gamemode:
   self: '&aYou have set your gamemode to &b{value}'
   other: "&aYou have set &b{target}'s &agamemode to &b{value}"
   target: '&aYour gamemode has been changed to &b{value} &aby &b{player}'
+spawn:
+  self: '&aYou have teleported to spawn.'
+  other: '&aYou have sent &b{target} &ato spawn'
+  target: '&aYou have been sent to spawn by &b{player}'
+  set: '&aYou have set the spawn location'
+  teleportonjoin: true
