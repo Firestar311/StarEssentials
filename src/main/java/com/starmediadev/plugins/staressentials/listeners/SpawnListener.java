@@ -10,16 +10,15 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 public record SpawnListener(StarEssentials plugin) implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
-        boolean teleportOnJoin = plugin.getConfig().getBoolean("spawn.teleportonjoin");
-        if (teleportOnJoin || !e.getPlayer().hasPlayedBefore()) {
-            Bukkit.getScheduler().runTaskLater(plugin, () -> e.getPlayer().teleport(plugin.getSpawn()), 1L);
+        if (plugin.getSpawnModule().teleportOnJoin() || !e.getPlayer().hasPlayedBefore()) {
+            Bukkit.getScheduler().runTaskLater(plugin, () -> e.getPlayer().teleport(plugin.getSpawnModule().getSpawn()), 1L);
         }
     }
     
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent e) {
         if (!e.isBedSpawn() || !e.isAnchorSpawn()) {
-            e.setRespawnLocation(plugin.getSpawn());
+            e.setRespawnLocation(plugin.getSpawnModule().getSpawn());
         }
     }
 }

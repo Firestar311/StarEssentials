@@ -2,7 +2,7 @@ package com.starmediadev.plugins.staressentials;
 
 import com.starmediadev.plugins.staressentials.cmds.*;
 import com.starmediadev.plugins.staressentials.listeners.GodListener;
-import com.starmediadev.plugins.staressentials.listeners.SpawnListener;
+import com.starmediadev.plugins.staressentials.module.SpawnModule;
 import com.starmediadev.plugins.starmcutils.module.StarModule;
 import com.starmediadev.plugins.starmcutils.util.Config;
 import com.starmediadev.plugins.starmcutils.util.MCUtils;
@@ -60,11 +60,10 @@ public class StarEssentials extends JavaPlugin {
     - spawn features (spawn itself, setting spawn, teleporting players on first login to spawn, teleporting players to spawn always (configurable)
      */
     
-    private Map<String, StarModule> modules = new HashMap<>();
+    private Map<String, StarModule<?>> modules = new HashMap<>();
     private Config godmodeConfig, modulesConfig;
     
     private Set<UUID> playersInGodMode = new HashSet<>();
-    private Location spawn;
     
     @Override
     public void onEnable() {
@@ -177,56 +176,22 @@ public class StarEssentials extends JavaPlugin {
         
         getCommand("gamemode").setExecutor(new GamemodeCommand(this));
         
-        if (getConfig().contains("spawn")) {
-            this.spawn = getConfig().getLocation("spawn.location");
-        } else {
-            this.spawn = Bukkit.getWorlds().get(0).getSpawnLocation();
-        }
-        
         //Modules
-        StarModule spawnModule = new StarModule(this, "spawn") {
-            public void createCommandExecutors() {
-                this.commands.put("spawn", new PlayerActionCmd(plugin, "staressentials.command.spawn", (target, self, sender) -> {
-                    target.teleport(spawn);
-                    sendActionMessage(plugin, target, self, sender, "spawn");
-                }));
-                
-                this.commands.put("setspawn", (sender, cmd, label, args) -> {
-                    if (!(sender instanceof Player player)) {
-                        sender.sendMessage(MCUtils.color("&cOnly players can use this command."));
-                        return true;
-                    }
-                    
-                    if (!player.hasPermission("staressentials.command.spawn.set")) {
-                        player.sendMessage(MCUtils.color("&cYou do not have permission to use that command."));
-                        return true;
-                    }
-                    
-                    setSpawn(player.getLocation());
-                    player.sendMessage(MCUtils.color(plugin.getConfig().getString("spawn.set")));
-                    return true;
-                });
-            }
-            
-            public void createEventListeners() {
-                this.listeners.add(new SpawnListener(StarEssentials.this));
-            }
-        };
-        
+        SpawnModule spawnModule = new SpawnModule(this);
         this.modules.put(spawnModule.getName(), spawnModule);
         
         ConfigurationSection modulesSection = modulesConfig.getConfiguration().getConfigurationSection("modules");
         if (modulesSection != null) {
             for (String moduleName : modulesSection.getKeys(false)) {
                 boolean enabled = modulesSection.getBoolean(moduleName + ".enabled");
-                StarModule module = this.modules.get(moduleName);
+                StarModule<?> module = this.modules.get(moduleName);
                 if (module != null) {
                     module.setEnabled(enabled);
                 }
             }
         }
         
-        for (StarModule module : this.modules.values()) {
+        for (StarModule<?> module : this.modules.values()) {
             module.init();
             if (module.isEnabled()) {
                 module.registerCommands();
@@ -237,6 +202,10 @@ public class StarEssentials extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new GodListener(this), this);
     }
     
+    public SpawnModule getSpawnModule() {
+        return (SpawnModule) modules.get("spawn");
+    }
+    
     @Override
     public void onDisable() {
         List<String> rawPlayersInGodMode = new ArrayList<>();
@@ -244,24 +213,17 @@ public class StarEssentials extends JavaPlugin {
         godmodeConfig.getConfiguration().set("players", rawPlayersInGodMode);
         godmodeConfig.save();
         
-        for (StarModule module : this.modules.values()) {
+        for (StarModule<?> module : this.modules.values()) {
             modulesConfig.getConfiguration().set("modules." + module.getName() + ".enabled", module.isEnabled());
         }
         modulesConfig.save();
-        
-        this.getConfig().set("spawn.location", this.spawn); //TODO move to the module config when implemented
-        this.saveConfig();
+    
+        for (StarModule<?> module : modules.values()) {
+            module.save();
+        }
     }
     
     public boolean isPlayerInGodMode(Player player) {
         return this.playersInGodMode.contains(player.getUniqueId());
-    }
-    
-    public Location getSpawn() {
-        return spawn;
-    }
-    
-    public void setSpawn(Location spawn) {
-        this.spawn = spawn;
     }
 }
