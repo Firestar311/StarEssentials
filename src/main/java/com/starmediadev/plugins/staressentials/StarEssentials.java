@@ -3,7 +3,7 @@ package com.starmediadev.plugins.staressentials;
 import com.starmediadev.plugins.staressentials.cmds.*;
 import com.starmediadev.plugins.staressentials.listeners.GodListener;
 import com.starmediadev.plugins.staressentials.listeners.SpawnListener;
-import com.starmediadev.plugins.staressentials.module.StarModule;
+import com.starmediadev.plugins.starmcutils.module.StarModule;
 import com.starmediadev.plugins.starmcutils.util.Config;
 import com.starmediadev.plugins.starmcutils.util.MCUtils;
 import com.starmediadev.utils.helper.StringHelper;
@@ -186,9 +186,9 @@ public class StarEssentials extends JavaPlugin {
         //Modules
         StarModule spawnModule = new StarModule(this, "spawn") {
             public void createCommandExecutors() {
-                this.commands.put("spawn", new PlayerActionCmd(starEssentials, "staressentials.command.spawn", (target, self, sender) -> {
+                this.commands.put("spawn", new PlayerActionCmd(plugin, "staressentials.command.spawn", (target, self, sender) -> {
                     target.teleport(spawn);
-                    sendActionMessage(starEssentials, target, self, sender, "spawn");
+                    sendActionMessage(plugin, target, self, sender, "spawn");
                 }));
                 
                 this.commands.put("setspawn", (sender, cmd, label, args) -> {
@@ -202,14 +202,14 @@ public class StarEssentials extends JavaPlugin {
                         return true;
                     }
                     
-                    starEssentials.setSpawn(player.getLocation());
-                    player.sendMessage(MCUtils.color(starEssentials.getConfig().getString("spawn.set")));
+                    setSpawn(player.getLocation());
+                    player.sendMessage(MCUtils.color(plugin.getConfig().getString("spawn.set")));
                     return true;
                 });
             }
     
             public void createEventListeners() {
-                this.listeners.add(new SpawnListener(starEssentials));
+                this.listeners.add(new SpawnListener(StarEssentials.this));
             }
         };
         

@@ -1,6 +1,5 @@
 package com.starmediadev.plugins.staressentials.cmds;
 
-import com.starmediadev.plugins.staressentials.StarEssentials;
 import com.starmediadev.plugins.starmcutils.util.MCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -8,13 +7,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class PlayerActionCmd implements CommandExecutor {
-    protected StarEssentials plugin;
+    protected JavaPlugin plugin;
     protected String permission;
     protected CmdAction cmdAction;
     
-    public PlayerActionCmd(StarEssentials plugin, String permission, CmdAction cmdAction) {
+    public PlayerActionCmd(JavaPlugin plugin, String permission, CmdAction cmdAction) {
         this.plugin = plugin;
         this.permission = permission;
         this.cmdAction = cmdAction;
@@ -59,7 +59,7 @@ public class PlayerActionCmd implements CommandExecutor {
         return true;
     }
     
-    public static void sendActionMessageValue(StarEssentials plugin, Player target, boolean self, CommandSender sender, String msgBase, Object value) {
+    public static void sendActionMessageValue(JavaPlugin plugin, Player target, boolean self, CommandSender sender, String msgBase, Object value) {
         if (self) {
             sender.sendMessage(MCUtils.color(plugin.getConfig().getString(msgBase + ".self").replace("{value}", value + "")));
         } else {
@@ -68,7 +68,7 @@ public class PlayerActionCmd implements CommandExecutor {
         }
     }
     
-    public static void sendActionMessage(StarEssentials plugin, Player target, boolean self, CommandSender sender, String msgBase) {
+    public static void sendActionMessage(JavaPlugin plugin, Player target, boolean self, CommandSender sender, String msgBase) {
         if (self) {
             target.sendMessage(MCUtils.color(plugin.getConfig().getString(msgBase + ".self")));
         } else {
