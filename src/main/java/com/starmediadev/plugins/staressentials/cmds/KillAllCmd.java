@@ -2,6 +2,7 @@ package com.starmediadev.plugins.staressentials.cmds;
 
 import com.starmediadev.plugins.staressentials.StarEssentials;
 import com.starmediadev.plugins.starmcutils.util.MCUtils;
+import com.starmediadev.plugins.starmcutils.util.ServerProperties;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -53,7 +54,7 @@ public record KillAllCmd(StarEssentials plugin) implements CommandExecutor {
         
         World targetWorld;
         if (sender instanceof ConsoleCommandSender) {
-            targetWorld = Bukkit.getWorlds().get(0);
+            targetWorld = Bukkit.getWorld(ServerProperties.getLevelName());
         } else if (sender instanceof Player player) {
             targetWorld = player.getWorld();
         } else {

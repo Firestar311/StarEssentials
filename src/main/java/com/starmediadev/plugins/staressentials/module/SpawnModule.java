@@ -4,6 +4,7 @@ import com.starmediadev.plugins.staressentials.StarEssentials;
 import com.starmediadev.plugins.staressentials.cmds.PlayerActionCmd;
 import com.starmediadev.plugins.staressentials.listeners.SpawnListener;
 import com.starmediadev.plugins.starmcutils.util.MCUtils;
+import com.starmediadev.plugins.starmcutils.util.ServerProperties;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -31,7 +32,7 @@ public class SpawnModule extends StarEssentialsModule {
     @Override
     protected void registerDefaultConfigValues() {
         this.defaultConfigValues.put("settings.teleportonjoin", false);
-        this.defaultConfigValues.put("settings.location", Bukkit.getWorlds().get(0).getSpawnLocation());
+        this.defaultConfigValues.put("settings.location", Bukkit.getWorld(ServerProperties.getLevelName()).getSpawnLocation());
     }
     
     @Override
