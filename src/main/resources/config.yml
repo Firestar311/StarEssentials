@@ -46,3 +46,5 @@ spawnmob:
   messages:
     single: '&aYou have spawned a(n) &b{entity}'
     multiple: '&aYou have spawned &b{amount} &aof &b{entity}'
+weather:
+  format: '&aYou have set the weather to &b{type} &afor &b{duration} &ain &b{world}'
