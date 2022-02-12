@@ -142,6 +142,7 @@ public class StarEssentials extends JavaPlugin {
         getCommand("spawnmob").setExecutor(new SpawnmobCmd(this));
         getCommand("weather").setExecutor(new WeatherCmd(this));
         getCommand("time").setExecutor(new TimeCmd(this));
+        getCommand("spawner").setExecutor(new SpawnerCmd(this));
         
         //Modules
         SpawnModule spawnModule = new SpawnModule(this);
