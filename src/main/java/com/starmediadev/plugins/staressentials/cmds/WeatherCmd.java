@@ -2,15 +2,11 @@ package com.starmediadev.plugins.staressentials.cmds;
 
 import com.starmediadev.plugins.staressentials.StarEssentials;
 import com.starmediadev.plugins.starmcutils.util.MCUtils;
-import com.starmediadev.plugins.starmcutils.util.ServerProperties;
 import com.starmediadev.utils.helper.TimeHelper;
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
 
 public record WeatherCmd(StarEssentials plugin) implements CommandExecutor {
     
@@ -18,18 +14,10 @@ public record WeatherCmd(StarEssentials plugin) implements CommandExecutor {
     
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        World world;
-        if (sender instanceof ConsoleCommandSender) {
-            world = Bukkit.getWorld(ServerProperties.getLevelName());
-        } else if (sender instanceof Player player) {
-            world = player.getWorld();
-        } else {
-            sender.sendMessage(MCUtils.color("&cOnly players can the Console can use that command."));
-            return true;
-        }
+        World world = MCUtils.getWorld(sender);
         
         if (world == null) {
-            sender.sendMessage(MCUtils.color("&cCould not determine the world for the command context."));
+            sender.sendMessage(MCUtils.color("&cOnly console and players can use that command."));
             return true;
         }
         
@@ -55,12 +43,14 @@ public record WeatherCmd(StarEssentials plugin) implements CommandExecutor {
         if (args.length > 1) {
             try {
                 rawDuration = Long.parseLong(args[1]);
-            } catch (NumberFormatException e) {}
+            } catch (NumberFormatException e) {
+            }
             
             if (rawDuration == DEFAULT_DURATION) {
                 try {
                     rawDuration = TimeHelper.parseTime(args[1]);
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                }
             }
             
             if (rawDuration == DEFAULT_DURATION) {
@@ -77,7 +67,7 @@ public record WeatherCmd(StarEssentials plugin) implements CommandExecutor {
             sender.sendMessage(MCUtils.color("&cThe duration " + args[1] + " is lower than 0. This is not a valid duration amount."));
             return true;
         }
-    
+        
         int duration = (int) (rawDuration / 1000);
         
         switch (type) {
