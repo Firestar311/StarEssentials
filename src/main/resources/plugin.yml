@@ -33,3 +33,4 @@ commands:
     spawnmob:
         aliases: [spawnentity]
     weather:
+    time:

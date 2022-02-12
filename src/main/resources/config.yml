@@ -48,3 +48,7 @@ spawnmob:
     multiple: '&aYou have spawned &b{amount} &aof &b{entity}'
 weather:
   format: '&aYou have set the weather to &b{type} &afor &b{duration} &ain &b{world}'
+time:
+  current: '&aThe current time in &b{world} &ais &b{time}'
+  displayformat: '12h'
+  set: '&aYou set the time in &b{world} &ato &b{time}'

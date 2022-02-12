@@ -24,42 +24,6 @@ import static com.starmediadev.plugins.staressentials.cmds.PlayerActionCmd.sendA
 import static com.starmediadev.plugins.staressentials.cmds.PlayerActionCmd.sendActionMessageValue;
 
 public class StarEssentials extends JavaPlugin {
-    /*
-    Add the following commands/features
-    
-    flyspeed command - default .1
-    walkspeed command - default .2
-    editsign
-    repair
-    - weather
-    - time
-    homes
-    warps
-    more (add more items based on what is holding)
-    List (Add an API for this though and can make it based on the ranks)
-    Item command (Spawn an item, will have support for StarItems, but does not replace this command)
-    near
-    - enchant
-    Give
-    Sudo (Add a hook for StarPerms/API for StarPerms to allow more control over this)
-    Back
-    
-    Stuff to add here and add checks for the other more indepth plugins to disable
-    - spawner (change spawner type)
-    invsee (and echest variant) will be in a moderator tools plugin eventually, this provides a very basic thing
-    - basic punishment commands (kick, warn, ban, tempban, mute, tempmute and kickall)
-    - Nicknames
-    - messaging commands (eventually add support for detecting StarChat), also toggle commands
-    - tp commands (tp, tpall, tphere, tpa, tpahere)
-    - Very basic economy system with Vault integration
-    - Ignore (StarChat overrides this)
-    - Socialspy
-    - CommandSpy
-    - Vanish
-    - Simple world management (just teleportation, a custom plugin for creating worlds will exist)
-    spawn features (spawn itself, setting spawn, teleporting players on first login to spawn, teleporting players to spawn always (configurable)
-     */
-    
     private Map<String, StarModule<?>> modules = new HashMap<>();
     private Config godmodeConfig, modulesConfig;
     
@@ -177,6 +141,7 @@ public class StarEssentials extends JavaPlugin {
         getCommand("gamemode").setExecutor(new GamemodeCommand(this));
         getCommand("spawnmob").setExecutor(new SpawnmobCmd(this));
         getCommand("weather").setExecutor(new WeatherCmd(this));
+        getCommand("time").setExecutor(new TimeCmd(this));
         
         //Modules
         SpawnModule spawnModule = new SpawnModule(this);
