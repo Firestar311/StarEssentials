@@ -17,6 +17,11 @@ public record SignEditCmd(StarEssentials plugin) implements CommandExecutor {
             sender.sendMessage(MCUtils.color("&cOnly players may use that command."));
             return true;
         }
+        
+        if (!player.hasPermission("staressentials.command.signedit")) {
+            player.sendMessage(MCUtils.color("&cYou do not have permission to use that command."));
+            return true;
+        }
     
         Block block = player.getTargetBlock(null, 50);
         if (block == null) {
@@ -35,6 +40,11 @@ public record SignEditCmd(StarEssentials plugin) implements CommandExecutor {
         }
         
         if (args[0].equalsIgnoreCase("setline") || args[0].equalsIgnoreCase("sl")) {
+            if (!player.hasPermission("staressentials.command.signedit.setline")) {
+                player.sendMessage(MCUtils.color("&cYou do not have permission to use that command."));
+                return true;
+            }
+            
             if (!(args.length > 1)) {
                 player.sendMessage(MCUtils.color("&cYou must provide a line number."));
                 return true;
@@ -77,6 +87,11 @@ public record SignEditCmd(StarEssentials plugin) implements CommandExecutor {
                 player.sendMessage(MCUtils.color(plugin.getConfig().getString("signedit.setline").replace("{line}", (line + 1) + "").replace("{text}", text)));
             }
         } else if (args[0].equalsIgnoreCase("setglowing") || args[0].equalsIgnoreCase("sg")) {
+            if (!player.hasPermission("staressentials.command.signedit.setglowing")) {
+                player.sendMessage(MCUtils.color("&cYou do not have permission to use that command."));
+                return true;
+            }
+            
             if (!(args.length > 1)) {
                 player.sendMessage(MCUtils.color("&cYou must provide a true or false value."));
                 return true;
@@ -96,6 +111,11 @@ public record SignEditCmd(StarEssentials plugin) implements CommandExecutor {
             sign.update();
             player.sendMessage(MCUtils.color(plugin.getConfig().getString("signedit.setglowing").replace("{value}", value + "")));
         } else if (args[0].equalsIgnoreCase("setcolor") || args[0].equalsIgnoreCase("sc")) {
+            if (!player.hasPermission("staressentials.command.signedit.setcolor")) {
+                player.sendMessage(MCUtils.color("&cYou do not have permission to use that command."));
+                return true;
+            }
+            
             if (!(args.length > 1)) {
                 player.sendMessage(MCUtils.color("&cYou must provide a dye color value."));
                 return true;

@@ -8,6 +8,9 @@ import org.bukkit.event.block.SignChangeEvent;
 public class SignListener implements Listener {
     @EventHandler
     public void onSignChange(SignChangeEvent e) {
+        if (!e.getPlayer().hasPermission("staressentials.signcolor")) {
+            return;
+        }
         for (int i = 0; i < e.getLines().length; i++) {
             String line = e.getLine(i);
             e.setLine(i, MCUtils.color(line));
