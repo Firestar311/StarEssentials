@@ -2,6 +2,7 @@ package com.starmediadev.plugins.staressentials;
 
 import com.starmediadev.plugins.staressentials.cmds.*;
 import com.starmediadev.plugins.staressentials.listeners.GodListener;
+import com.starmediadev.plugins.staressentials.listeners.SignListener;
 import com.starmediadev.plugins.staressentials.module.SpawnModule;
 import com.starmediadev.plugins.starmcutils.module.StarModule;
 import com.starmediadev.plugins.starmcutils.util.Config;
@@ -143,6 +144,7 @@ public class StarEssentials extends JavaPlugin {
         getCommand("weather").setExecutor(new WeatherCmd(this));
         getCommand("time").setExecutor(new TimeCmd(this));
         getCommand("spawner").setExecutor(new SpawnerCmd(this));
+        getCommand("signedit").setExecutor(new SignEditCmd(this));
         
         //Modules
         SpawnModule spawnModule = new SpawnModule(this);
@@ -168,6 +170,7 @@ public class StarEssentials extends JavaPlugin {
         }
         
         getServer().getPluginManager().registerEvents(new GodListener(this), this);
+        getServer().getPluginManager().registerEvents(new SignListener(), this);
     }
     
     public SpawnModule getSpawnModule() {

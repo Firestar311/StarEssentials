@@ -54,3 +54,8 @@ time:
   set: '&aYou set the time in &b{world} &ato &b{time}'
 spawner:
   set: '&aYou set the spawner to now spawn &b{entity}'
+signedit:
+  setline: '&aYou set line &b{line} &ato {text}'
+  clearline: '&aYou cleared the text on line &b{line}'
+  setglowing: '&aYou set glowing on that sign to &b{value}'
+  setcolor: '&aYou set the color on that sign to &b{color}'
