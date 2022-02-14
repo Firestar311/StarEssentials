@@ -57,14 +57,14 @@ public record SpawnerCmd(StarEssentials plugin) implements CommandExecutor {
         CreatureSpawner spawner = (CreatureSpawner) block.getState();
         
         if (spawner.getSpawnedType() == entityType) {
-            player.sendMessage(MCUtils.color("&cThe spawner is already spawning " + EntityNames.getName(entityType)));
+            player.sendMessage(MCUtils.color("&cThe spawner is already spawning " + EntityNames.getDefaultName(entityType)));
             return true;
         }
         
         spawner.setSpawnedType(entityType);
         spawner.update();
         
-        player.sendMessage(MCUtils.color(plugin.getConfig().getString("spawner.set").replace("{entity}", EntityNames.getName(entityType))));
+        player.sendMessage(MCUtils.color(plugin.getConfig().getString("spawner.set").replace("{entity}", EntityNames.getDefaultName(entityType))));
         return true;
     }
 }

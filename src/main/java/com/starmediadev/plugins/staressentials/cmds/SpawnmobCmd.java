@@ -115,9 +115,9 @@ public record SpawnmobCmd(StarEssentials plugin) implements CommandExecutor {
         }
         
         if (amount == 1) {
-            player.sendMessage(MCUtils.color(plugin.getConfig().getString("spawnmob.messages.single").replace("{entity}", EntityNames.getName(entityType))));
+            player.sendMessage(MCUtils.color(plugin.getConfig().getString("spawnmob.messages.single").replace("{entity}", EntityNames.getDefaultName(entityType))));
         } else {
-            player.sendMessage(MCUtils.color(plugin.getConfig().getString("spawnmob.messages.multiple").replace("{entity}", EntityNames.getName(entityType)).replace("{amount}", amount + "")));
+            player.sendMessage(MCUtils.color(plugin.getConfig().getString("spawnmob.messages.multiple").replace("{entity}", EntityNames.getDefaultName(entityType)).replace("{amount}", amount + "")));
         }
         
         return true;
