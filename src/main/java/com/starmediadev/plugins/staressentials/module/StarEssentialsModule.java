@@ -5,6 +5,6 @@ import com.starmediadev.plugins.starmcutils.module.StarModule;
 
 public abstract class StarEssentialsModule extends StarModule<StarEssentials> {
     public StarEssentialsModule(StarEssentials plugin, String name) {
-        super(plugin, name);
+        super(plugin, "modules", name);
     }
 }

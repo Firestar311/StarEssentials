@@ -1,8 +1,9 @@
 package com.starmediadev.plugins.staressentials;
 
 import com.starmediadev.plugins.staressentials.cmds.*;
-import com.starmediadev.plugins.staressentials.listeners.GodListener;
 import com.starmediadev.plugins.staressentials.listeners.SignListener;
+import com.starmediadev.plugins.staressentials.module.BroadcastModule;
+import com.starmediadev.plugins.staressentials.module.PlayerStatsModule;
 import com.starmediadev.plugins.staressentials.module.SpawnModule;
 import com.starmediadev.plugins.starmcutils.module.StarModule;
 import com.starmediadev.plugins.starmcutils.util.Config;
@@ -26,41 +27,13 @@ import static com.starmediadev.plugins.staressentials.cmds.PlayerActionCmd.sendA
 
 public class StarEssentials extends JavaPlugin {
     private Map<String, StarModule<?>> modules = new HashMap<>();
-    private Config godmodeConfig, modulesConfig;
-    
-    private Set<UUID> playersInGodMode = new HashSet<>();
+    private Config modulesConfig;
     
     @Override
     public void onEnable() {
         this.saveDefaultConfig();
-        godmodeConfig = new Config(this, "godmode.yml");
-        godmodeConfig.setup();
-        
         modulesConfig = new Config(this, "modules.yml");
         modulesConfig.setup();
-        
-        List<String> rawPlayersInGodMode = godmodeConfig.getConfiguration().getStringList("players");
-        for (String entry : rawPlayersInGodMode) {
-            this.playersInGodMode.add(UUID.fromString(entry));
-        }
-        
-        //Non Module commands
-        getCommand("broadcast").setExecutor(new BroadcastCmd(this));
-        getCommand("feed").setExecutor(new PlayerActionCmd(this, "staressentials.command.feed", (target, self, sender) -> {
-            target.setFoodLevel(20);
-            target.setSaturation(10);
-            sendActionMessage(this, target, self, sender, "feed");
-        }));
-        
-        getCommand("fly").setExecutor(new PlayerActionCmd(this, "staressentials.command.fly", (target, self, sender) -> {
-            target.setAllowFlight(!target.getAllowFlight());
-            sendActionMessageValue(this, target, self, sender, "fly", target.getAllowFlight());
-        }));
-        
-        getCommand("heal").setExecutor(new PlayerActionCmd(this, "staressentials.command.heal", (target, self, sender) -> {
-            target.setHealth(20);
-            sendActionMessage(this, target, self, sender, "heal");
-        }));
         
         getCommand("kill").setExecutor(new PlayerActionCmd(this, "staressentials.command.kill", (target, self, sender) -> {
             target.setHealth(0);
@@ -72,16 +45,6 @@ public class StarEssentials extends JavaPlugin {
             target.getInventory().setArmorContents(new ItemStack[0]);
             target.getInventory().setExtraContents(new ItemStack[0]);
             sendActionMessage(this, target, self, sender, "clearinv");
-        }));
-        
-        getCommand("god").setExecutor(new PlayerActionCmd(this, "staressentials.command.god", (target, self, sender) -> {
-            if (playersInGodMode.contains(target.getUniqueId())) {
-                playersInGodMode.remove(target.getUniqueId());
-            } else {
-                playersInGodMode.add(target.getUniqueId());
-            }
-            
-            sendActionMessageValue(this, target, self, sender, "god", playersInGodMode.contains(target.getUniqueId()));
         }));
         
         getCommand("killall").setExecutor(new KillAllCmd(this));
@@ -149,6 +112,9 @@ public class StarEssentials extends JavaPlugin {
         //Modules
         SpawnModule spawnModule = new SpawnModule(this);
         this.modules.put(spawnModule.getName(), spawnModule);
+    
+        BroadcastModule broadcastModule = new BroadcastModule(this);
+        this.modules.put(broadcastModule.getName(), broadcastModule);
         
         ConfigurationSection modulesSection = modulesConfig.getConfiguration().getConfigurationSection("modules");
         if (modulesSection != null) {
@@ -169,7 +135,6 @@ public class StarEssentials extends JavaPlugin {
             }
         }
         
-        getServer().getPluginManager().registerEvents(new GodListener(this), this);
         getServer().getPluginManager().registerEvents(new SignListener(), this);
     }
     
@@ -177,13 +142,12 @@ public class StarEssentials extends JavaPlugin {
         return (SpawnModule) modules.get("spawn");
     }
     
+    public PlayerStatsModule getPlayerStatsModule() {
+        return (PlayerStatsModule) modules.get("playerstats");
+    }
+    
     @Override
     public void onDisable() {
-        List<String> rawPlayersInGodMode = new ArrayList<>();
-        this.playersInGodMode.forEach(uuid -> rawPlayersInGodMode.add(uuid.toString()));
-        godmodeConfig.getConfiguration().set("players", rawPlayersInGodMode);
-        godmodeConfig.save();
-        
         for (StarModule<?> module : this.modules.values()) {
             modulesConfig.getConfiguration().set("modules." + module.getName() + ".enabled", module.isEnabled());
         }
@@ -195,6 +159,11 @@ public class StarEssentials extends JavaPlugin {
     }
     
     public boolean isPlayerInGodMode(Player player) {
-        return this.playersInGodMode.contains(player.getUniqueId());
+        PlayerStatsModule playerStatsModule = getPlayerStatsModule();
+        if (playerStatsModule == null) {
+            return false;
+        }
+        
+        return playerStatsModule.isPlayerInGodMode(player);
     }
 }
