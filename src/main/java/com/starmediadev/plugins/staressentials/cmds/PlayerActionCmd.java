@@ -1,5 +1,6 @@
 package com.starmediadev.plugins.staressentials.cmds;
 
+import com.starmediadev.plugins.staressentials.module.StarEssentialsModule;
 import com.starmediadev.plugins.starmcutils.util.MCUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -74,6 +75,24 @@ public class PlayerActionCmd implements CommandExecutor {
         } else {
             sender.sendMessage(MCUtils.color(plugin.getConfig().getString(msgBase + ".other").replace("{target}", target.getName())));
             target.sendMessage(MCUtils.color(plugin.getConfig().getString(msgBase + ".target").replace("{player}", sender.getName())));
+        }
+    }
+    
+    public static void sendActionMessageValue(StarEssentialsModule module, Player target, boolean self, CommandSender sender, String msgBase, Object value) {
+        if (self) {
+            sender.sendMessage(MCUtils.color(module.getConfig().getConfiguration().getString(msgBase + ".self").replace("{value}", value + "")));
+        } else {
+            sender.sendMessage(MCUtils.color(module.getConfig().getConfiguration().getString(msgBase + ".other").replace("{target}", target.getName()).replace("{value}", value + "")));
+            target.sendMessage(MCUtils.color(module.getConfig().getConfiguration().getString(msgBase + ".target").replace("{player}", sender.getName()).replace("{value}", value + "")));
+        }
+    }
+    
+    public static void sendActionMessage(StarEssentialsModule module, Player target, boolean self, CommandSender sender, String msgBase) {
+        if (self) {
+            target.sendMessage(MCUtils.color(module.getConfig().getConfiguration().getString(msgBase + ".self")));
+        } else {
+            sender.sendMessage(MCUtils.color(module.getConfig().getConfiguration().getString(msgBase + ".other").replace("{target}", target.getName())));
+            target.sendMessage(MCUtils.color(module.getConfig().getConfiguration().getString(msgBase + ".target").replace("{player}", sender.getName())));
         }
     }
     

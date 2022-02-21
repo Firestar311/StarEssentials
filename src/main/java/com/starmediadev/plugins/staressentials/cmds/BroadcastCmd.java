@@ -40,7 +40,7 @@ public record BroadcastCmd(StarEssentials plugin) implements CommandExecutor {
         
         String message = sb.toString().trim();
         
-        String format = plugin.getConfig().getString("broadcast.format");
+        String format = plugin.getBroadcastModule().getConfig().getConfiguration().getString("settings.format");
         if (format == null) {
             sender.sendMessage(MCUtils.color("&cThere is a problem with the broadcast format in the config. Contact your server admin."));
             return true;

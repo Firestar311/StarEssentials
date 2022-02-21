@@ -1,17 +1,3 @@
-broadcast:
-  format: '&e[BROADCAST] &6{displayname}&8: &b{message}'
-feed:
-  self: '&aYou have fed yourself.'
-  other: '&aYou have fed &b{target}'
-  target: '&aYou have been fed by &b{player}'
-fly:
-  self: '&aYou have toggled flight to &b{value}'
-  other: '&aYou have toggled flight for &b{target} &ato &b{value}'
-  target: '&aYour flight has been toggled to &b{value} &aby &b{player}'
-heal:
-  self: '&aYou have healed yourself.'
-  other: '&aYou have healed &b{target}'
-  target: '&aYou have been healed by &b{player}'
 kill:
   self: '&aYou have killed yourself.'
   other: '&aYou have killed &b{target}'
@@ -22,10 +8,6 @@ clearinv:
   self: '&aYou have cleared your inventory.'
   other: '&aYou have cleared the inventory of &b{target}'
   target: '&aYour inventory has been cleared by &b{player}'
-god:
-  self: '&aYou have toggled god mode to &b{value}'
-  other: '&aYou have toggled god mode for &b{target} &ato &b{value}'
-  target: '&aYour god mode has been toggled to &b{value} &aby &b{player}'
 top:
   self: '&aYou have teleported yourself to the highest block at your location.'
   other: '&aYou have teleported &b{target} &ato the highest block at their location'

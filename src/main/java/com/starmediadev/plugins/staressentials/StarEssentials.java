@@ -166,4 +166,8 @@ public class StarEssentials extends JavaPlugin {
         
         return playerStatsModule.isPlayerInGodMode(player);
     }
+    
+    public BroadcastModule getBroadcastModule() {
+        return (BroadcastModule) modules.get("broadcast");
+    }
 }
