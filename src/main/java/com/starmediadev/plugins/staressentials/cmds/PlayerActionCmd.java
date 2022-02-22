@@ -56,7 +56,7 @@ public class PlayerActionCmd implements CommandExecutor {
             }
         }
         
-        cmdAction.performAction(target, target.getName().equals(sender.getName()), sender);
+        cmdAction.performAction(target, target.getName().equals(sender.getName()), sender, args);
         return true;
     }
     
@@ -97,6 +97,6 @@ public class PlayerActionCmd implements CommandExecutor {
     }
     
     public interface CmdAction {
-        void performAction(Player target, boolean self, CommandSender sender);
+        void performAction(Player target, boolean self, CommandSender sender, String[] args);
     }
 }

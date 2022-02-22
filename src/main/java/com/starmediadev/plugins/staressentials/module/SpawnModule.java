@@ -37,7 +37,7 @@ public class SpawnModule extends StarEssentialsModule {
     
     @Override
     public void createCommandExecutors() {
-        this.commands.put("spawn", new PlayerActionCmd(plugin, "staressentials.command.spawn", (target, self, sender) -> {
+        this.commands.put("spawn", new PlayerActionCmd(plugin, "staressentials.command.spawn", (target, self, sender, args) -> {
             target.teleport(spawn);
             sendActionMessage(plugin, target, self, sender, "spawn");
         }));

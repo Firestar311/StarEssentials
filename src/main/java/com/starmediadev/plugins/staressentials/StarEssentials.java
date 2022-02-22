@@ -35,12 +35,12 @@ public class StarEssentials extends JavaPlugin {
         modulesConfig = new Config(this, "modules.yml");
         modulesConfig.setup();
         
-        getCommand("kill").setExecutor(new PlayerActionCmd(this, "staressentials.command.kill", (target, self, sender) -> {
+        getCommand("kill").setExecutor(new PlayerActionCmd(this, "staressentials.command.kill", (target, self, sender, args) -> {
             target.setHealth(0);
             sendActionMessage(this, target, self, sender, "kill");
         }));
         
-        getCommand("clearinv").setExecutor(new PlayerActionCmd(this, "staressentials.command.clearinv", (target, self, sender) -> {
+        getCommand("clearinv").setExecutor(new PlayerActionCmd(this, "staressentials.command.clearinv", (target, self, sender, args) -> {
             target.getInventory().setContents(new ItemStack[0]);
             target.getInventory().setArmorContents(new ItemStack[0]);
             target.getInventory().setExtraContents(new ItemStack[0]);
@@ -74,7 +74,7 @@ public class StarEssentials extends JavaPlugin {
             }
         });
         
-        getCommand("top").setExecutor(new PlayerActionCmd(this, "staressentials.command.top", (target, self, sender) -> {
+        getCommand("top").setExecutor(new PlayerActionCmd(this, "staressentials.command.top", (target, self, sender, args) -> {
             Block highestBlock = target.getWorld().getHighestBlockAt(target.getLocation());
             Location location = highestBlock.getLocation().clone();
             location.setY(location.getY() + 1);
@@ -82,22 +82,22 @@ public class StarEssentials extends JavaPlugin {
             sendActionMessage(this, target, self, sender, "top");
         }));
         
-        getCommand("gmc").setExecutor(new PlayerActionCmd(this, "staressentials.command.gamemode.creative", (target, self, sender) -> {
+        getCommand("gmc").setExecutor(new PlayerActionCmd(this, "staressentials.command.gamemode.creative", (target, self, sender, args) -> {
             target.setGameMode(GameMode.CREATIVE);
             sendActionMessageValue(this, target, self, sender, "gamemode", StringHelper.capitalizeEveryWord(target.getGameMode().name()));
         }));
         
-        getCommand("gms").setExecutor(new PlayerActionCmd(this, "staressentials.command.gamemode.survival", (target, self, sender) -> {
+        getCommand("gms").setExecutor(new PlayerActionCmd(this, "staressentials.command.gamemode.survival", (target, self, sender, args) -> {
             target.setGameMode(GameMode.SURVIVAL);
             sendActionMessageValue(this, target, self, sender, "gamemode", StringHelper.capitalizeEveryWord(target.getGameMode().name()));
         }));
         
-        getCommand("gmsp").setExecutor(new PlayerActionCmd(this, "staressentials.command.gamemode.spectator", (target, self, sender) -> {
+        getCommand("gmsp").setExecutor(new PlayerActionCmd(this, "staressentials.command.gamemode.spectator", (target, self, sender, args) -> {
             target.setGameMode(GameMode.SPECTATOR);
             sendActionMessageValue(this, target, self, sender, "gamemode", StringHelper.capitalizeEveryWord(target.getGameMode().name()));
         }));
         
-        getCommand("gma").setExecutor(new PlayerActionCmd(this, "staressentials.command.gamemode.adventure", (target, self, sender) -> {
+        getCommand("gma").setExecutor(new PlayerActionCmd(this, "staressentials.command.gamemode.adventure", (target, self, sender, args) -> {
             target.setGameMode(GameMode.ADVENTURE);
             sendActionMessageValue(this, target, self, sender, "gamemode", StringHelper.capitalizeEveryWord(target.getGameMode().name()));
         }));
