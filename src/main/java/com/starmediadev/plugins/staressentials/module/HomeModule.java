@@ -1,7 +1,9 @@
 package com.starmediadev.plugins.staressentials.module;
 
 import com.starmediadev.plugins.staressentials.StarEssentials;
+import com.starmediadev.plugins.staressentials.cmds.DelHomeCmd;
 import com.starmediadev.plugins.staressentials.cmds.HomeCmd;
+import com.starmediadev.plugins.staressentials.cmds.RenameHomeCmd;
 import com.starmediadev.plugins.staressentials.cmds.SetHomeCmd;
 import com.starmediadev.plugins.staressentials.objects.Home;
 import org.bukkit.Location;
@@ -32,20 +34,42 @@ public class HomeModule extends StarEssentialsModule {
         this.defaultConfigValues.put("settings.messages.listhomes.other", "&b{player}&e's Homes: &b{homelist}");
         this.defaultConfigValues.put("settings.messages.renamehome.self", "&eYou renamed the home &b{oldhomename} &eto &b{newhomename}");
         this.defaultConfigValues.put("settings.messages.renamehome.other", "&eYou renamed &b{player}&e's home &b{oldhomename} &eto &b{newhomename}");
+        this.defaultConfigValues.put("settings.messages.renamehome.target", "&b{player} &erenamed your home &b{oldhomename} &eto &b{newhomename}");
     }
     
     @Override
     protected void createCommandExecutors() {
         this.commands.put("sethome", new SetHomeCmd(this));
         this.commands.put("home", new HomeCmd(this));
+        this.commands.put("delhome", new DelHomeCmd(this));
+        this.commands.put("renamehome", new RenameHomeCmd(this));
     }
     
-    public void addHome(Home home) {
+    public boolean addHome(Home home) {
         if (homes.containsKey(home.getPlayer())) {
-            homes.get(home.getPlayer()).add(home);
+            return homes.get(home.getPlayer()).add(home);
         } else {
-            homes.put(home.getPlayer(), new HashSet<>(Collections.singleton(home)));
+            return !homes.put(home.getPlayer(), new HashSet<>(Collections.singleton(home))).isEmpty();
         }
+    }
+    
+    public String removeHome(UUID player, String homeName) {
+        if (homes.containsKey(player)) {
+            Set<Home> homes = this.homes.get(player);
+            if (homes.isEmpty()) {
+                return "{player} does not have any homes.";
+            }
+    
+            List<Home> filteredHomes = homes.stream().filter(ph -> ph.getName().equalsIgnoreCase(homeName)).toList();
+            if (filteredHomes.size() == 0) {
+                return "{player} does not have a home with that name.";
+            }
+            
+            homes.remove(filteredHomes.get(0));
+        } else {
+            return "{player} does not have any homes.";
+        }
+        return "";
     }
     
     public Set<Home> getHomes(UUID player) {

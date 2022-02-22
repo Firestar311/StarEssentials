@@ -79,7 +79,11 @@ public record SetHomeCmd(HomeModule module) implements CommandExecutor {
         long creationDate = System.currentTimeMillis();
         
         Home home = new Home(target.getUniqueId(), rawHomeName, location, creationDate);
-        module.addHome(home);
+        boolean success = module.addHome(home);
+        if (!success) {
+            player.sendMessage(MCUtils.color("&cProblem creating the home: Collection update failed."));
+            return true;
+        }
         
         if (!other) {
             player.sendMessage(MCUtils.color(module.getConfig().getConfiguration().getString("settings.messages.sethome.self").replace("{homename}", rawHomeName)));

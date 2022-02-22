@@ -11,12 +11,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public record HomeCmd(HomeModule module) implements CommandExecutor {
+public record DelHomeCmd(HomeModule module) implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(sender instanceof Player player)) {
@@ -24,7 +24,7 @@ public record HomeCmd(HomeModule module) implements CommandExecutor {
             return true;
         }
         
-        if (!player.hasPermission("staressentials.home.teleport")) {
+        if (!player.hasPermission("staressentials.home.delete")) {
             player.sendMessage(MCUtils.color("&cYou do not have permission to use that command."));
             return true;
         }
@@ -40,7 +40,7 @@ public record HomeCmd(HomeModule module) implements CommandExecutor {
         
         if (args[0].contains(":")) {
             String[] split = args[0].split(":");
-            if (player.hasPermission("staressentials.home.teleport.others")) {
+            if (player.hasPermission("staressentials.home.delete.others")) {
                 for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
                     if (offlinePlayer.getName().equalsIgnoreCase(split[0])) {
                         target = offlinePlayer;
@@ -56,34 +56,28 @@ public record HomeCmd(HomeModule module) implements CommandExecutor {
                 rawHomeName = split[1];
                 other = true;
             } else {
-                player.sendMessage(MCUtils.color("&cYou do not have permission to set homes for other players."));
+                player.sendMessage(MCUtils.color("&cYou do not have permission to delete homes from other players."));
                 return true;
             }
         } else {
             target = player;
             rawHomeName = args[0];
         }
-    
-        Set<Home> homes = module.getHomes(target.getUniqueId());
-        Stream<Home> matchingHomes = homes.stream().filter(home -> home.getName().equalsIgnoreCase(rawHomeName));
-        long homesWithName = matchingHomes.count();
-        if (homesWithName > 0) {
-            player.sendMessage(MCUtils.color("&cA home with that name does not exist."));
-            return true;
-        }
         
-        if (homesWithName > 1) {
-            player.sendMessage(MCUtils.color("&4Critical Problem: Multiple homes exist with that name. This should never happen, contact Plugin Developer"));
-            return true;
-        }
-    
-        Home home = matchingHomes.toList().get(0);
-        player.teleport(home.getLocation());
-    
-        if (!other) {
-            player.sendMessage(MCUtils.color(module.getConfig().getConfiguration().getString("settings.messages.teleporthome.self").replace("{homename}", rawHomeName)));
+        String message = module.removeHome(target.getUniqueId(), rawHomeName);
+        
+        if (!Objects.equals(message, "")) {
+            player.sendMessage(MCUtils.color(message.replace("{player}", target.getName())));
         } else {
-            player.sendMessage(MCUtils.color(module.getConfig().getConfiguration().getString("settings.messages.teleporthome.other").replace("{homename}", rawHomeName).replace("{player}", target.getName())));
+            if (!other) {
+                player.sendMessage(MCUtils.color(module.getConfig().getConfiguration().getString("settings.messages.delhome.self").replace("{homename}", rawHomeName)));
+            } else {
+                if (target.isOnline()) {
+                    Player onlineTarget = (Player) target;
+                    onlineTarget.sendMessage(MCUtils.color(module.getConfig().getConfiguration().getString("settings.messages.delhome.target").replace("{homename}", rawHomeName).replace("{player}", player.getName())));
+                }
+                player.sendMessage(MCUtils.color(module.getConfig().getConfiguration().getString("settings.messages.delhome.other").replace("{homename}", rawHomeName).replace("{target}", target.getName())));
+            }
         }
     
         return true;
