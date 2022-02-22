@@ -36,3 +36,8 @@ commands:
     time:
     spawner:
     signedit:
+    sethome:
+    delhome:
+    home:
+    listhomes:
+    renamehome:

@@ -1,6 +1,7 @@
 package com.starmediadev.plugins.staressentials.module;
 
 import com.starmediadev.plugins.staressentials.StarEssentials;
+import com.starmediadev.plugins.staressentials.cmds.HomeCmd;
 import com.starmediadev.plugins.staressentials.cmds.SetHomeCmd;
 import com.starmediadev.plugins.staressentials.objects.Home;
 import org.bukkit.Location;
@@ -36,6 +37,7 @@ public class HomeModule extends StarEssentialsModule {
     @Override
     protected void createCommandExecutors() {
         this.commands.put("sethome", new SetHomeCmd(this));
+        this.commands.put("home", new HomeCmd(this));
     }
     
     public void addHome(Home home) {
