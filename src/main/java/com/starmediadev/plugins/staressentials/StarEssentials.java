@@ -3,6 +3,7 @@ package com.starmediadev.plugins.staressentials;
 import com.starmediadev.plugins.staressentials.cmds.*;
 import com.starmediadev.plugins.staressentials.listeners.SignListener;
 import com.starmediadev.plugins.staressentials.module.BroadcastModule;
+import com.starmediadev.plugins.staressentials.module.HomeModule;
 import com.starmediadev.plugins.staressentials.module.PlayerStatsModule;
 import com.starmediadev.plugins.staressentials.module.SpawnModule;
 import com.starmediadev.plugins.starmcutils.module.StarModule;
@@ -115,6 +116,9 @@ public class StarEssentials extends JavaPlugin {
     
         BroadcastModule broadcastModule = new BroadcastModule(this);
         this.modules.put(broadcastModule.getName(), broadcastModule);
+    
+        HomeModule homeModule = new HomeModule(this);
+        this.modules.put(homeModule.getName(), homeModule);
         
         ConfigurationSection modulesSection = modulesConfig.getConfiguration().getConfigurationSection("modules");
         if (modulesSection != null) {
@@ -144,6 +148,10 @@ public class StarEssentials extends JavaPlugin {
     
     public PlayerStatsModule getPlayerStatsModule() {
         return (PlayerStatsModule) modules.get("playerstats");
+    }
+    
+    public HomeModule getHomeModule() {
+        return (HomeModule) modules.get("home");
     }
     
     @Override

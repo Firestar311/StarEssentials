@@ -1,10 +1,7 @@
 package com.starmediadev.plugins.staressentials.module;
 
 import com.starmediadev.plugins.staressentials.StarEssentials;
-import com.starmediadev.plugins.staressentials.cmds.DelHomeCmd;
-import com.starmediadev.plugins.staressentials.cmds.HomeCmd;
-import com.starmediadev.plugins.staressentials.cmds.RenameHomeCmd;
-import com.starmediadev.plugins.staressentials.cmds.SetHomeCmd;
+import com.starmediadev.plugins.staressentials.cmds.*;
 import com.starmediadev.plugins.staressentials.objects.Home;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -23,7 +20,7 @@ public class HomeModule extends StarEssentialsModule {
     @Override
     protected void registerDefaultConfigValues() {
         this.defaultConfigValues.put("settings.messages.sethome.self", "&eYou set a home with the name &b{homename}");
-        this.defaultConfigValues.put("settings.messages.sethome.other", "&eYou set a home for player &b{target} with the name &b{homename}");
+        this.defaultConfigValues.put("settings.messages.sethome.other", "&eYou set a home for player &b{target} &ewith the name &b{homename}");
         this.defaultConfigValues.put("settings.messages.sethome.target", "&e{player} &eset a home for you with the name &b{value}");
         this.defaultConfigValues.put("settings.messages.delhome.self", "&eYou deleted a home with the name &b{homename}");
         this.defaultConfigValues.put("settings.messages.delhome.other", "&eYou deleted &b{player}&e's home called {homename}");
@@ -43,13 +40,14 @@ public class HomeModule extends StarEssentialsModule {
         this.commands.put("home", new HomeCmd(this));
         this.commands.put("delhome", new DelHomeCmd(this));
         this.commands.put("renamehome", new RenameHomeCmd(this));
+        this.commands.put("listhomes", new ListHomeCmd(this));
     }
     
-    public boolean addHome(Home home) {
+    public void addHome(Home home) {
         if (homes.containsKey(home.getPlayer())) {
-            return homes.get(home.getPlayer()).add(home);
+            homes.get(home.getPlayer()).add(home);
         } else {
-            return !homes.put(home.getPlayer(), new HashSet<>(Collections.singleton(home))).isEmpty();
+            homes.put(home.getPlayer(), new HashSet<>(Collections.singleton(home)));
         }
     }
     
@@ -73,7 +71,25 @@ public class HomeModule extends StarEssentialsModule {
     }
     
     public Set<Home> getHomes(UUID player) {
-        return new HashSet<>(this.homes.get(player));
+        Set<Home> homes = this.homes.get(player);
+        if (homes == null) {
+            return new HashSet<>();
+        }
+        return new HashSet<>(homes);
+    }
+    
+    public Home findHome(UUID player, String name) {
+        Set<Home> homes = this.homes.get(player);
+        Home home = null;
+    
+        for (Home h : homes) {
+            if (name.equalsIgnoreCase(h.getName())) {
+                home = h;
+                break;
+            }
+        }
+        
+        return home;
     }
     
     @Override
@@ -83,7 +99,7 @@ public class HomeModule extends StarEssentialsModule {
             ConfigurationSection homesSection = config.getConfigurationSection("homes");
             homesSection.getKeys(false).forEach(puuid -> {
                 UUID uuid = UUID.fromString(puuid);
-                ConfigurationSection playerHomesSection = config.getConfigurationSection("puuid");
+                ConfigurationSection playerHomesSection = homesSection.getConfigurationSection(puuid);
                 if (playerHomesSection != null) {
                     playerHomesSection.getKeys(false).forEach(hn -> {
                         String name = playerHomesSection.getString(hn + ".name");
@@ -101,8 +117,10 @@ public class HomeModule extends StarEssentialsModule {
     
     @Override
     protected void saveConfigSettings() {
+        YamlConfiguration config = getConfig().getConfiguration();
+        config.set("homes", null);
+        this.config.save();
         this.homes.forEach((player, homes) -> {
-            YamlConfiguration config = getConfig().getConfiguration();
             homes.forEach(home -> {
                 String basePath = "homes." + player.toString() + "." + home.getName().toLowerCase().replace(" ", "_");
                 config.set(basePath + ".name", home.getName());
