@@ -2,10 +2,7 @@ package com.starmediadev.plugins.staressentials;
 
 import com.starmediadev.plugins.staressentials.cmds.*;
 import com.starmediadev.plugins.staressentials.listeners.SignListener;
-import com.starmediadev.plugins.staressentials.module.BroadcastModule;
-import com.starmediadev.plugins.staressentials.module.HomeModule;
-import com.starmediadev.plugins.staressentials.module.PlayerStatsModule;
-import com.starmediadev.plugins.staressentials.module.SpawnModule;
+import com.starmediadev.plugins.staressentials.module.*;
 import com.starmediadev.plugins.starmcutils.module.StarModule;
 import com.starmediadev.plugins.starmcutils.util.Config;
 import com.starmediadev.plugins.starmcutils.util.MCUtils;
@@ -20,8 +17,10 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import revxrsal.commands.bukkit.BukkitCommandHandler;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.starmediadev.plugins.staressentials.cmds.PlayerActionCmd.sendActionMessage;
 import static com.starmediadev.plugins.staressentials.cmds.PlayerActionCmd.sendActionMessageValue;
@@ -32,6 +31,9 @@ public class StarEssentials extends JavaPlugin {
     
     @Override
     public void onEnable() {
+        BukkitCommandHandler commandHandler = BukkitCommandHandler.create(this);
+        
+        
         this.saveDefaultConfig();
         modulesConfig = new Config(this, "modules.yml");
         modulesConfig.setup();
@@ -120,6 +122,12 @@ public class StarEssentials extends JavaPlugin {
         HomeModule homeModule = new HomeModule(this);
         this.modules.put(homeModule.getName(), homeModule);
         
+        PlayerStatsModule playerStatsModule = new PlayerStatsModule(this);
+        this.modules.put(playerStatsModule.getName(), playerStatsModule);
+    
+        GamemodeModule gamemodeModule = new GamemodeModule(this);
+        this.modules.put(gamemodeModule.getName(), gamemodeModule);
+        
         ConfigurationSection modulesSection = modulesConfig.getConfiguration().getConfigurationSection("modules");
         if (modulesSection != null) {
             for (String moduleName : modulesSection.getKeys(false)) {
@@ -132,26 +140,16 @@ public class StarEssentials extends JavaPlugin {
         }
         
         for (StarModule<?> module : this.modules.values()) {
-            module.init();
+            module.init(commandHandler);
             if (module.isEnabled()) {
                 module.registerCommands();
                 module.registerListeners();
             }
         }
         
+        commandHandler.registerBrigadier();
+        
         getServer().getPluginManager().registerEvents(new SignListener(), this);
-    }
-    
-    public SpawnModule getSpawnModule() {
-        return (SpawnModule) modules.get("spawn");
-    }
-    
-    public PlayerStatsModule getPlayerStatsModule() {
-        return (PlayerStatsModule) modules.get("playerstats");
-    }
-    
-    public HomeModule getHomeModule() {
-        return (HomeModule) modules.get("home");
     }
     
     @Override
@@ -164,18 +162,5 @@ public class StarEssentials extends JavaPlugin {
         for (StarModule<?> module : modules.values()) {
             module.save();
         }
-    }
-    
-    public boolean isPlayerInGodMode(Player player) {
-        PlayerStatsModule playerStatsModule = getPlayerStatsModule();
-        if (playerStatsModule == null) {
-            return false;
-        }
-        
-        return playerStatsModule.isPlayerInGodMode(player);
-    }
-    
-    public BroadcastModule getBroadcastModule() {
-        return (BroadcastModule) modules.get("broadcast");
     }
 }

@@ -5,15 +5,9 @@ api-version: 1.18
 description: ${project.description}
 depend: [StarMCUtils]
 commands: 
-    broadcast:
-      aliases: [bc]
-    feed:
-    fly:
-    heal: 
     kill:
     killall:
     clearinv:
-    god:
     inventorysee:
         aliases: [invsee]
     enderchest:
@@ -28,8 +22,6 @@ commands:
     gms:
     gmsp:
     gma:
-    spawn:
-    setspawn:
     spawnmob:
         aliases: [spawnentity]
     weather:

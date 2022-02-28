@@ -1,14 +1,12 @@
 package com.starmediadev.plugins.staressentials.module;
 
 import com.starmediadev.plugins.staressentials.StarEssentials;
-import com.starmediadev.plugins.staressentials.cmds.PlayerActionCmd;
+import com.starmediadev.plugins.staressentials.lampcmds.PlayerStatsCmds;
 import com.starmediadev.plugins.staressentials.listeners.GodListener;
 import org.bukkit.entity.Player;
+import revxrsal.commands.bukkit.BukkitCommandHandler;
 
 import java.util.*;
-
-import static com.starmediadev.plugins.staressentials.cmds.PlayerActionCmd.sendActionMessage;
-import static com.starmediadev.plugins.staressentials.cmds.PlayerActionCmd.sendActionMessageValue;
 
 public class PlayerStatsModule extends StarEssentialsModule {
     
@@ -38,32 +36,13 @@ public class PlayerStatsModule extends StarEssentialsModule {
     }
     
     @Override
-    protected void createCommandExecutors() {
-        commands.put("feed", new PlayerActionCmd(plugin, "staressentials.command.feed", (target, self, sender, args) -> {
-            target.setFoodLevel(20);
-            target.setSaturation(10);
-            sendActionMessage(this, target, self, sender, "settings.feed");
-        }));
+    protected void registerLampDependencies(BukkitCommandHandler commandHandler) {
+        commandHandler.registerDependency(PlayerStatsModule.class, this);
+    }
     
-        commands.put("fly", new PlayerActionCmd(plugin, "staressentials.command.fly", (target, self, sender, args) -> {
-            target.setAllowFlight(!target.getAllowFlight());
-            sendActionMessageValue(this, target, self, sender, "settings.fly", target.getAllowFlight());
-        }));
-    
-        commands.put("heal", new PlayerActionCmd(plugin, "staressentials.command.heal", (target, self, sender, args) -> {
-            target.setHealth(20);
-            sendActionMessage(this, target, self, sender, "settings.heal");
-        }));
-    
-        commands.put("god", new PlayerActionCmd(plugin, "staressentials.command.god", (target, self, sender, args) -> {
-            if (playersInGodMode.contains(target.getUniqueId())) {
-                playersInGodMode.remove(target.getUniqueId());
-            } else {
-                playersInGodMode.add(target.getUniqueId());
-            }
-        
-            sendActionMessageValue(this, target, self, sender, "settings.god", playersInGodMode.contains(target.getUniqueId()));
-        }));
+    @Override
+    protected void registerLampCommands(BukkitCommandHandler commandHandler) {
+        commandHandler.register(new PlayerStatsCmds());
     }
     
     @Override
@@ -86,7 +65,25 @@ public class PlayerStatsModule extends StarEssentialsModule {
         config.getConfiguration().set("players", rawPlayersInGodMode);
     }
     
+    public boolean toggleGod(Player player) {
+        if (isPlayerInGodMode(player)) {
+            removePlayerFromGod(player);
+            return false;
+        } else {
+            addPlayerToGod(player);
+            return true;
+        }
+    }
+    
     public boolean isPlayerInGodMode(Player player) {
         return this.playersInGodMode.contains(player.getUniqueId());
+    }
+    
+    public void removePlayerFromGod(Player player) {
+        this.playersInGodMode.remove(player.getUniqueId());
+    }
+    
+    public void addPlayerToGod(Player player) {
+        this.playersInGodMode.add(player.getUniqueId());
     }
 }

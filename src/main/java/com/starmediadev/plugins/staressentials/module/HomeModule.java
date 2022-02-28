@@ -2,10 +2,12 @@ package com.starmediadev.plugins.staressentials.module;
 
 import com.starmediadev.plugins.staressentials.StarEssentials;
 import com.starmediadev.plugins.staressentials.cmds.*;
+import com.starmediadev.plugins.staressentials.lampcmds.HomeCmds;
 import com.starmediadev.plugins.staressentials.objects.Home;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import revxrsal.commands.bukkit.BukkitCommandHandler;
 
 import java.util.*;
 
@@ -35,12 +37,13 @@ public class HomeModule extends StarEssentialsModule {
     }
     
     @Override
-    protected void createCommandExecutors() {
-        this.commands.put("sethome", new SetHomeCmd(this));
-        this.commands.put("home", new HomeCmd(this));
-        this.commands.put("delhome", new DelHomeCmd(this));
-        this.commands.put("renamehome", new RenameHomeCmd(this));
-        this.commands.put("listhomes", new ListHomeCmd(this));
+    protected void registerLampDependencies(BukkitCommandHandler commandHandler) {
+        commandHandler.registerDependency(HomeModule.class, this);
+    }
+    
+    @Override
+    protected void registerLampCommands(BukkitCommandHandler commandHandler) {
+        commandHandler.register(new HomeCmds());
     }
     
     public void addHome(Home home) {
