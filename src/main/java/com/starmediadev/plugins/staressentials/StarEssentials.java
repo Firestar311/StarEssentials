@@ -6,9 +6,7 @@ import com.starmediadev.plugins.staressentials.module.*;
 import com.starmediadev.plugins.starmcutils.module.StarModule;
 import com.starmediadev.plugins.starmcutils.util.Config;
 import com.starmediadev.plugins.starmcutils.util.MCUtils;
-import com.starmediadev.utils.helper.StringHelper;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
@@ -23,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.starmediadev.plugins.staressentials.cmds.PlayerActionCmd.sendActionMessage;
-import static com.starmediadev.plugins.staressentials.cmds.PlayerActionCmd.sendActionMessageValue;
 
 public class StarEssentials extends JavaPlugin {
     private Map<String, StarModule<?>> modules = new HashMap<>();
@@ -85,27 +82,6 @@ public class StarEssentials extends JavaPlugin {
             sendActionMessage(this, target, self, sender, "top");
         }));
         
-        getCommand("gmc").setExecutor(new PlayerActionCmd(this, "staressentials.command.gamemode.creative", (target, self, sender, args) -> {
-            target.setGameMode(GameMode.CREATIVE);
-            sendActionMessageValue(this, target, self, sender, "gamemode", StringHelper.capitalizeEveryWord(target.getGameMode().name()));
-        }));
-        
-        getCommand("gms").setExecutor(new PlayerActionCmd(this, "staressentials.command.gamemode.survival", (target, self, sender, args) -> {
-            target.setGameMode(GameMode.SURVIVAL);
-            sendActionMessageValue(this, target, self, sender, "gamemode", StringHelper.capitalizeEveryWord(target.getGameMode().name()));
-        }));
-        
-        getCommand("gmsp").setExecutor(new PlayerActionCmd(this, "staressentials.command.gamemode.spectator", (target, self, sender, args) -> {
-            target.setGameMode(GameMode.SPECTATOR);
-            sendActionMessageValue(this, target, self, sender, "gamemode", StringHelper.capitalizeEveryWord(target.getGameMode().name()));
-        }));
-        
-        getCommand("gma").setExecutor(new PlayerActionCmd(this, "staressentials.command.gamemode.adventure", (target, self, sender, args) -> {
-            target.setGameMode(GameMode.ADVENTURE);
-            sendActionMessageValue(this, target, self, sender, "gamemode", StringHelper.capitalizeEveryWord(target.getGameMode().name()));
-        }));
-        
-        getCommand("gamemode").setExecutor(new GamemodeCommand(this));
         getCommand("spawnmob").setExecutor(new SpawnmobCmd(this));
         getCommand("weather").setExecutor(new WeatherCmd(this));
         getCommand("time").setExecutor(new TimeCmd(this));

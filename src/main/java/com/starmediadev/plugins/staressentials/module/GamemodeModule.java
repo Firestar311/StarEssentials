@@ -25,14 +25,4 @@ public class GamemodeModule extends StarEssentialsModule {
     protected void registerLampDependencies(BukkitCommandHandler commandHandler) {
         commandHandler.registerDependency(GamemodeModule.class, this);
     }
-    
-    @Override
-    protected void loadValuesFromConfig() {
-        
-    }
-    
-    @Override
-    protected void saveConfigSettings() {
-        
-    }
 }

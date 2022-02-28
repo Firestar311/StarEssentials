@@ -39,10 +39,38 @@ public class GamemodeCmds {
             throw new CommandErrorException("You do not have permission to use that gamemode.");
         }
     
+        changeGameMode(sender, player, gameMode);
+    }
+    
+    @Command("gmc")
+    @CommandPermission(GAMEMODE_PERM + ".creative")
+    public void gmc(CommandSender sender, @Named("target") @Optional Player player) {
+        changeGameMode(sender, player, GameMode.CREATIVE);
+    }
+    
+    @Command("gms")
+    @CommandPermission(GAMEMODE_PERM + ".survival")
+    public void gms(CommandSender sender, @Named("target") @Optional Player player) {
+        changeGameMode(sender, player, GameMode.SURVIVAL);
+    }
+    
+    @Command("gma")
+    @CommandPermission(GAMEMODE_PERM + ".adventure")
+    public void gma(CommandSender sender, @Named("target") @Optional Player player) {
+        changeGameMode(sender, player, GameMode.ADVENTURE);
+    }
+    
+    @Command("gmsp")
+    @CommandPermission(GAMEMODE_PERM + ".spectator")
+    public void gmsp(CommandSender sender, @Named("target") @Optional Player player) {
+        changeGameMode(sender, player, GameMode.SPECTATOR);
+    }
+    
+    private void changeGameMode(CommandSender sender, Player player, GameMode gameMode) {
         Player target = null;
         boolean self = false;
         if (sender instanceof ConsoleCommandSender) {
-            if (player != null) {
+            if (player == null) {
                 throw new CommandErrorException("You must provide a player as the console");
             }
             target = player;
@@ -63,6 +91,6 @@ public class GamemodeCmds {
         }
     
         target.setGameMode(gameMode);
-        PlayerActionCmd.sendActionMessageValue(gamemodeModule, target, self, sender, "gamemode", StringHelper.capitalizeEveryWord(gameMode.name()));
+        PlayerActionCmd.sendActionMessageValue(gamemodeModule, target, self, sender, "messages", StringHelper.capitalizeEveryWord(gameMode.name()));
     }
 }

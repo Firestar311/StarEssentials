@@ -47,7 +47,7 @@ public class PlayerStatsModule extends StarEssentialsModule {
     
     @Override
     protected void createEventListeners() {
-        this.listeners.add(new GodListener(plugin));
+        this.listeners.add(new GodListener(this));
     }
     
     @Override
