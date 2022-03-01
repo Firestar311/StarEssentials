@@ -1,7 +1,6 @@
 package com.starmediadev.plugins.staressentials;
 
 import com.starmediadev.plugins.staressentials.cmds.*;
-import com.starmediadev.plugins.staressentials.listeners.SignListener;
 import com.starmediadev.plugins.staressentials.module.*;
 import com.starmediadev.plugins.starmcutils.module.StarModule;
 import com.starmediadev.plugins.starmcutils.util.Config;
@@ -86,23 +85,14 @@ public class StarEssentials extends JavaPlugin {
         getCommand("weather").setExecutor(new WeatherCmd(this));
         getCommand("time").setExecutor(new TimeCmd(this));
         getCommand("spawner").setExecutor(new SpawnerCmd(this));
-        getCommand("signedit").setExecutor(new SignEditCmd(this));
         
         //Modules
-        SpawnModule spawnModule = new SpawnModule(this);
-        this.modules.put(spawnModule.getName(), spawnModule);
-    
-        BroadcastModule broadcastModule = new BroadcastModule(this);
-        this.modules.put(broadcastModule.getName(), broadcastModule);
-    
-        HomeModule homeModule = new HomeModule(this);
-        this.modules.put(homeModule.getName(), homeModule);
-        
-        PlayerStatsModule playerStatsModule = new PlayerStatsModule(this);
-        this.modules.put(playerStatsModule.getName(), playerStatsModule);
-    
-        GamemodeModule gamemodeModule = new GamemodeModule(this);
-        this.modules.put(gamemodeModule.getName(), gamemodeModule);
+        registerModule(new SpawnModule(this));
+        registerModule(new BroadcastModule(this));
+        registerModule(new HomeModule(this));
+        registerModule(new PlayerStatsModule(this));
+        registerModule(new GamemodeModule(this));
+        registerModule(new SignEditModule(this));
         
         ConfigurationSection modulesSection = modulesConfig.getConfiguration().getConfigurationSection("modules");
         if (modulesSection != null) {
@@ -124,8 +114,10 @@ public class StarEssentials extends JavaPlugin {
         }
         
         commandHandler.registerBrigadier();
-        
-        getServer().getPluginManager().registerEvents(new SignListener(), this);
+    }
+    
+    private void registerModule(StarEssentialsModule module) {
+        this.modules.put(module.getName(), module);
     }
     
     @Override

@@ -30,7 +30,7 @@ public class SpawnModule extends StarEssentialsModule {
     protected void registerDefaultConfigValues() {
         this.defaultConfigValues.put("settings.teleportonjoin", false);
         this.defaultConfigValues.put("settings.location", Bukkit.getWorld(ServerProperties.getLevelName()).getSpawnLocation());
-        this.defaultConfigValues.put("settings.set", "&eYou set the server spawn to your location.");
+        this.defaultConfigValues.put("messages.set", "&eYou set the server spawn to your location.");
         this.defaultConfigValues.put("messages.self", "&eYou have teleported to spawn.");
         this.defaultConfigValues.put("messages.other", "&eYou have sent &b{target} &eto spawn");
         this.defaultConfigValues.put("messages.target", "&eYou have been sent to spawn by &b{player}");
