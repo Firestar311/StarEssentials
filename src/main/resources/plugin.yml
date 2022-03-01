@@ -5,7 +5,6 @@ api-version: 1.18
 description: ${project.description}
 depend: [StarMCUtils]
 commands: 
-    kill:
     killall:
     clearinv:
     inventorysee:

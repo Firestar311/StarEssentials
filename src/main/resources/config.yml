@@ -1,7 +1,3 @@
-kill:
-  self: '&aYou have killed yourself.'
-  other: '&aYou have killed &b{target}'
-  target: '&aYou have been killed by &b{player}'
 killall:
   format: '&aYou killed &e{total} &aentities of type &b{type}'
 clearinv:

@@ -29,15 +29,9 @@ public class StarEssentials extends JavaPlugin {
     public void onEnable() {
         BukkitCommandHandler commandHandler = BukkitCommandHandler.create(this);
         
-        
         this.saveDefaultConfig();
         modulesConfig = new Config(this, "modules.yml");
         modulesConfig.setup();
-        
-        getCommand("kill").setExecutor(new PlayerActionCmd(this, "staressentials.command.kill", (target, self, sender, args) -> {
-            target.setHealth(0);
-            sendActionMessage(this, target, self, sender, "kill");
-        }));
         
         getCommand("clearinv").setExecutor(new PlayerActionCmd(this, "staressentials.command.clearinv", (target, self, sender, args) -> {
             target.getInventory().setContents(new ItemStack[0]);
@@ -93,6 +87,7 @@ public class StarEssentials extends JavaPlugin {
         registerModule(new PlayerStatsModule(this));
         registerModule(new GamemodeModule(this));
         registerModule(new SignEditModule(this));
+        registerModule(new KillModule(this));
         
         ConfigurationSection modulesSection = modulesConfig.getConfiguration().getConfigurationSection("modules");
         if (modulesSection != null) {
