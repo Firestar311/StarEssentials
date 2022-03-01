@@ -72,8 +72,8 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
-            <id>smd-repo</id>
-            <url>https://maven.pkg.github.com/starmediadevelopment/maven</url>
+            <id>starmediadev-maven</id>
+            <url>https://repo.starmediadev.com/snapshots</url>
         </repository>
         <repository>
             <id>jitpack.io</id>
