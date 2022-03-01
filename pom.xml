@@ -13,6 +13,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <jar.output>${user.home}\Documents\JarOutput</jar.output>
+        <minecraft.version>1.18.2-R0.1-SNAPSHOT</minecraft.version>
     </properties>
     
     <name>StarEssentials</name>
@@ -84,7 +85,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.18.1-R0.1-SNAPSHOT</version>
+            <version>${minecraft.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
