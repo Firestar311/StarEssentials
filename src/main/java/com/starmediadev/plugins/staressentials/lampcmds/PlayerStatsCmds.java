@@ -11,8 +11,8 @@ import revxrsal.commands.annotation.Named;
 import revxrsal.commands.annotation.Optional;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
-import static com.starmediadev.plugins.staressentials.cmds.PlayerActionCmd.sendActionMessage;
-import static com.starmediadev.plugins.staressentials.cmds.PlayerActionCmd.sendActionMessageValue;
+import static com.starmediadev.plugins.staressentials.util.SEUtils.sendActionMessage;
+import static com.starmediadev.plugins.staressentials.util.SEUtils.sendActionMessageValue;
 
 public class PlayerStatsCmds {
     
@@ -24,7 +24,7 @@ public class PlayerStatsCmds {
     @Command("feed")
     @CommandPermission(FEED_PERM)
     public void feed(CommandSender sender, @Named("target") @Optional Player player) {
-        Pair<Player, Boolean> pair = SEUtils.checkPlayerStatsCmdConditions(sender, player, FEED_PERM);
+        Pair<Player, Boolean> pair = SEUtils.getPlayerTarget(sender, player, FEED_PERM);
         Player target = pair.getValue1();
         boolean self = pair.getValue2();
     
@@ -38,7 +38,7 @@ public class PlayerStatsCmds {
     @Command("fly")
     @CommandPermission(FLY_PERM)
     public void fly(CommandSender sender, @Named("target") @Optional Player player) {
-        Pair<Player, Boolean> pair = SEUtils.checkPlayerStatsCmdConditions(sender, player, FLY_PERM);
+        Pair<Player, Boolean> pair = SEUtils.getPlayerTarget(sender, player, FLY_PERM);
         Player target = pair.getValue1();
         boolean self = pair.getValue2();
     
@@ -51,7 +51,7 @@ public class PlayerStatsCmds {
     @Command("heal")
     @CommandPermission(HEAL_PERM)
     public void heal(CommandSender sender, @Named("target") @Optional Player player) {
-        Pair<Player, Boolean> pair = SEUtils.checkPlayerStatsCmdConditions(sender, player, HEAL_PERM);
+        Pair<Player, Boolean> pair = SEUtils.getPlayerTarget(sender, player, HEAL_PERM);
         Player target = pair.getValue1();
         boolean self = pair.getValue2();
     
@@ -64,7 +64,7 @@ public class PlayerStatsCmds {
     @Command("god")
     @CommandPermission(GOD_PERM)
     public void god(CommandSender sender, @Named("target") @Optional Player player) {
-        Pair<Player, Boolean> pair = SEUtils.checkPlayerStatsCmdConditions(sender, player, GOD_PERM);
+        Pair<Player, Boolean> pair = SEUtils.getPlayerTarget(sender, player, GOD_PERM);
         Player target = pair.getValue1();
         boolean self = pair.getValue2();
     

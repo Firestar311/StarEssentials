@@ -1,9 +1,5 @@
 killall:
   format: '&aYou killed &e{total} &aentities of type &b{type}'
-clearinv:
-  self: '&aYou have cleared your inventory.'
-  other: '&aYou have cleared the inventory of &b{target}'
-  target: '&aYour inventory has been cleared by &b{player}'
 top:
   self: '&aYou have teleported yourself to the highest block at your location.'
   other: '&aYou have teleported &b{target} &ato the highest block at their location'

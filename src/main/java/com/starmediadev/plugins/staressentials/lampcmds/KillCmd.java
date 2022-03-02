@@ -1,7 +1,7 @@
 package com.starmediadev.plugins.staressentials.lampcmds;
 
-import com.starmediadev.plugins.staressentials.cmds.PlayerActionCmd;
 import com.starmediadev.plugins.staressentials.module.KillModule;
+import com.starmediadev.plugins.staressentials.util.SEUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -11,8 +11,6 @@ import revxrsal.commands.annotation.Named;
 import revxrsal.commands.annotation.Optional;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 import revxrsal.commands.exception.CommandErrorException;
-
-import java.util.Objects;
 
 public class KillCmd {
     
@@ -42,6 +40,6 @@ public class KillCmd {
         }
         
         player.setHealth(0);
-        PlayerActionCmd.sendActionMessage(module, player, self, sender, "messages");
+        SEUtils.sendActionMessage(module, player, self, sender, "messages");
     }
 }

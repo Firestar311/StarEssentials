@@ -6,7 +6,6 @@ description: ${project.description}
 depend: [StarMCUtils]
 commands: 
     killall:
-    clearinv:
     inventorysee:
         aliases: [invsee]
     enderchest:

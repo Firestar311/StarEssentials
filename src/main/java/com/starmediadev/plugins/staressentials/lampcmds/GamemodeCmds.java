@@ -1,7 +1,7 @@
 package com.starmediadev.plugins.staressentials.lampcmds;
 
-import com.starmediadev.plugins.staressentials.cmds.PlayerActionCmd;
 import com.starmediadev.plugins.staressentials.module.GamemodeModule;
+import com.starmediadev.plugins.staressentials.util.SEUtils;
 import com.starmediadev.utils.helper.StringHelper;
 import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
@@ -91,6 +91,6 @@ public class GamemodeCmds {
         }
     
         target.setGameMode(gameMode);
-        PlayerActionCmd.sendActionMessageValue(gamemodeModule, target, self, sender, "messages", StringHelper.capitalizeEveryWord(gameMode.name()));
+        SEUtils.sendActionMessageValue(gamemodeModule, target, self, sender, "messages", StringHelper.capitalizeEveryWord(gameMode.name()));
     }
 }

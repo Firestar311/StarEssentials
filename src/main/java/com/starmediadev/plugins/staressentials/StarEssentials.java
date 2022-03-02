@@ -12,14 +12,13 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.starmediadev.plugins.staressentials.cmds.PlayerActionCmd.sendActionMessage;
+import static com.starmediadev.plugins.staressentials.util.SEUtils.sendActionMessage;
 
 public class StarEssentials extends JavaPlugin {
     private Map<String, StarModule<?>> modules = new HashMap<>();
@@ -32,13 +31,6 @@ public class StarEssentials extends JavaPlugin {
         this.saveDefaultConfig();
         modulesConfig = new Config(this, "modules.yml");
         modulesConfig.setup();
-        
-        getCommand("clearinv").setExecutor(new PlayerActionCmd(this, "staressentials.command.clearinv", (target, self, sender, args) -> {
-            target.getInventory().setContents(new ItemStack[0]);
-            target.getInventory().setArmorContents(new ItemStack[0]);
-            target.getInventory().setExtraContents(new ItemStack[0]);
-            sendActionMessage(this, target, self, sender, "clearinv");
-        }));
         
         getCommand("killall").setExecutor(new KillAllCmd(this));
         
@@ -88,6 +80,7 @@ public class StarEssentials extends JavaPlugin {
         registerModule(new GamemodeModule(this));
         registerModule(new SignEditModule(this));
         registerModule(new KillModule(this));
+        registerModule(new ClearInvModule(this));
         
         ConfigurationSection modulesSection = modulesConfig.getConfiguration().getConfigurationSection("modules");
         if (modulesSection != null) {
