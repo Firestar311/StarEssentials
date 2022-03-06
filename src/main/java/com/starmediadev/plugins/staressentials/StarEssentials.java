@@ -15,6 +15,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
 
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,7 +87,7 @@ public class StarEssentials extends JavaPlugin {
         registerModule(new KillModule(this));
         registerModule(new ClearInvModule(this));
         
-        ConfigurationSection modulesSection = modulesConfig.getConfiguration().getConfigurationSection("modules");
+        ConfigurationSection modulesSection = modulesConfig.getConfigurationSection("modules");
         if (modulesSection != null) {
             for (String moduleName : modulesSection.getKeys(false)) {
                 boolean enabled = modulesSection.getBoolean(moduleName + ".enabled");
@@ -111,7 +116,7 @@ public class StarEssentials extends JavaPlugin {
     @Override
     public void onDisable() {
         for (StarModule<?> module : this.modules.values()) {
-            modulesConfig.getConfiguration().set("modules." + module.getName() + ".enabled", module.isEnabled());
+            modulesConfig.set("modules." + module.getName() + ".enabled", module.isEnabled());
         }
         modulesConfig.save();
     
