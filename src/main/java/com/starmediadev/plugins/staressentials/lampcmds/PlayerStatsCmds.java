@@ -27,7 +27,7 @@ public class PlayerStatsCmds {
         Pair<Player, Boolean> pair = SEUtils.getPlayerTarget(sender, player, FEED_PERM);
         Player target = pair.getValue1();
         boolean self = pair.getValue2();
-    
+        
         target.setFoodLevel(20);
         target.setSaturation(10);
         sendActionMessage(module, target, self, sender, "settings.feed");
@@ -41,7 +41,7 @@ public class PlayerStatsCmds {
         Pair<Player, Boolean> pair = SEUtils.getPlayerTarget(sender, player, FLY_PERM);
         Player target = pair.getValue1();
         boolean self = pair.getValue2();
-    
+        
         target.setAllowFlight(!target.getAllowFlight());
         sendActionMessageValue(module, target, self, sender, "settings.fly", target.getAllowFlight());
     }
@@ -54,7 +54,7 @@ public class PlayerStatsCmds {
         Pair<Player, Boolean> pair = SEUtils.getPlayerTarget(sender, player, HEAL_PERM);
         Player target = pair.getValue1();
         boolean self = pair.getValue2();
-    
+        
         target.setHealth(20);
         sendActionMessage(module, target, self, sender, "settings.heal");
     }
@@ -67,8 +67,16 @@ public class PlayerStatsCmds {
         Pair<Player, Boolean> pair = SEUtils.getPlayerTarget(sender, player, GOD_PERM);
         Player target = pair.getValue1();
         boolean self = pair.getValue2();
-    
+        
         boolean value = module.toggleGod(target);
         sendActionMessageValue(module, target, self, sender, "settings.god", value);
+    }
+    
+    private static final String WORKBENCH_PERM = "staressentials.command.workbench";
+    
+    @Command({"workbench", "wb"})
+    @CommandPermission(WORKBENCH_PERM)
+    public void workbench(Player player) {
+        player.openWorkbench(player.getLocation(), true);
     }
 }
