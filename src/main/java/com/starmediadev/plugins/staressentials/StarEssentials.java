@@ -3,25 +3,16 @@ package com.starmediadev.plugins.staressentials;
 import com.starmediadev.plugins.staressentials.cmds.*;
 import com.starmediadev.plugins.staressentials.module.*;
 import com.starmediadev.plugins.starmcutils.module.StarModule;
-import com.starmediadev.plugins.starmcutils.util.Config;
-import com.starmediadev.plugins.starmcutils.util.MCUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import com.starmediadev.plugins.starmcutils.util.*;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
-import revxrsal.commands.bukkit.BukkitCommandHandler;
 
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.starmediadev.plugins.staressentials.util.SEUtils.sendActionMessage;
 
@@ -31,8 +22,6 @@ public class StarEssentials extends JavaPlugin {
     
     @Override
     public void onEnable() {
-        BukkitCommandHandler commandHandler = BukkitCommandHandler.create(this);
-        
         this.saveDefaultConfig();
         modulesConfig = new Config(this, "modules.yml");
         modulesConfig.setup();
@@ -99,14 +88,12 @@ public class StarEssentials extends JavaPlugin {
         }
         
         for (StarModule<?> module : this.modules.values()) {
-            module.init(commandHandler);
+            module.init();
             if (module.isEnabled()) {
                 module.registerCommands();
                 module.registerListeners();
             }
         }
-        
-        commandHandler.registerBrigadier();
     }
     
     private void registerModule(StarEssentialsModule module) {
